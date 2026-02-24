@@ -13,6 +13,9 @@
 
     --primary-color: rgb(157, 73, 236);
     --secondary-color: rgb(207, 166, 245);
+    --errors-color: rgb(255, 0, 0);
+
+    --button-shadow: 0 2px 10px hsla(283, 82%, 42%, 0.25);
 
     --gradient-active-button: linear-gradient( 
     to bottom, 
@@ -28,16 +31,13 @@
     );
     --gradient-disabled-button: linear-gradient(
         to bottom,
-        hsl(154, 49%, 63%) 0%,
-        hsl(154, 53%, 62%) 90%,
-        hsl(154, 59%, 46%) 100%
+        var(--secondary-color),
+        var(--secondary-color),
+        var(--secondary-color)
     );
 
     --gradient-header: 
     linear-gradient(330deg,var(--secondary-color) 0%, rgb(186, 112, 255) 53%, var(--primary-color) 100%);
-
-    --button-shadow: 0 4px 10px hsl(154, 59%, 41%, 0.25);
-    --card-shadow: 0px 5px hsl(0, 0%, 12%, 0.2);
 
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -104,6 +104,7 @@ main{
 }
 
 .input-wrapper{
+    position: relative;
     display: flex;
     flex-direction: row;
 }
@@ -122,11 +123,36 @@ main{
     font-weight: var(--font-weight-semibold);
     width: 100%;
     box-sizing: border-box;
+    padding-right: 36px;
 }
 
 .field:focus-visible{
     outline: none;
     border: 1px solid var(--secondary-color);
+}
+
+.validate-border{
+    border: 1px solid var(--errors-color);
+}
+
+.validation-message{
+    color: var(--errors-color);
+    font-size: 0.65rem;
+    text-align: right;
+    font-style: italic;
+    margin: 0;
+}
+
+.error-icon{
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 90%;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0;
+    margin: 0;
+    display: none;
 }
 
 .forwarding a{
@@ -147,8 +173,16 @@ main{
     font-weight: var(--font-weight-semibold);
 }
 
-button:not(:disabled):active{
+.submit:not(:disabled):hover{
+    box-shadow: var(--button-shadow);
+}
+
+.submit:not(:disabled):active{
     background: var(--gradient-pressed-button);
+}
+
+.submit:disabled{
+    background: var(--gradient-disabled-button);
 }
 
 
