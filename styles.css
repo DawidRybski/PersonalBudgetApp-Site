@@ -11,6 +11,8 @@
     --spacing-6: 2rem;
     --spacing-7: 3rem;
 
+    --hero-overlap: clamp(-14px, -2.5vw, -20px);
+
     --primary-color: rgb(157, 73, 236);
     --secondary-color: rgb(207, 166, 245);
     --errors-color: rgb(255, 0, 0);
@@ -68,13 +70,37 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 100svh;
     margin: auto;
 }
 
+.hero{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: var(--spacing-6);
+}
+
 .hero_content{
+    position: relative;
     background-color: hsla(0, 0%, 100%, 0.712);
     max-width: 600px;
+    padding: var(--spacing-5);
+    transform: translateY(var(--hero-overlap));
+}
+
+.hero_content h1{
+    color: var(--primary-color);
+}
+
+.hero_content p{
+    text-align: justify;
+}
+
+.hero_content span{
+    color: var(--primary-color);
 }
 
 .form-card{
@@ -169,7 +195,9 @@ main{
     color: var(--secondary-color);
 }
 
-.submit{
+.button-primary{
+    text-align: center;
+    text-decoration: none;
     background: var(--gradient-active-button);
     border-radius: var(--radius-button);
     border: 1px solid var(--secondary-color);
@@ -178,21 +206,41 @@ main{
     font-weight: var(--font-weight-semibold);
 }
 
-.submit:not(:disabled):hover{
+.button-primary:not(:disabled):hover{
     box-shadow: var(--button-shadow);
 }
 
-.submit:not(:disabled):active{
+.button-primary:not(:disabled):active{
     background: var(--gradient-pressed-button);
 }
 
-.submit:disabled{
+.button-primary:disabled{
     background: var(--gradient-disabled-button);
+}
+
+.button-outline{
+    text-align: center;
+    text-decoration: none;
+    background: none;
+    border-radius: var(--radius-button);
+    border: 1px solid var(--primary-color);
+    padding: var(--spacing-1);
+    color: var(--primary-color);
+    font-weight: var(--font-weight-semibold);
+}
+
+.button-outline:not(:disabled):hover{
+    background: var(--secondary-color);
+    color: white;
 }
 
 
 @media (min-width: 781px){
     .logo h1 br{
         display: none;
+    }
+
+    .hero_content{
+        transform: translateY(calc(var(--hero-overlap) - 12px));
     }
 }
