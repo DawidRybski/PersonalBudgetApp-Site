@@ -165,6 +165,8 @@ main{
 }
 
 .submit{
+    text-align: center;
+    text-decoration: none;
     background: var(--gradient-active-button);
     border-radius: var(--radius-button);
     border: 1px solid var(--secondary-color);
