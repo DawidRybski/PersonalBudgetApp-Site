@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="p-3 mb-3"> 
+        <section class="container d-flex align-items-center justify-content-between"> 
+            <div class="logo">
+                <img src="assets/images/piggy-bank-icon.svg" height="25px" alt="" aria-hidden="true"/>
+                <h1 class="h6">Budget <br>Manager</h1>   
+            </div>
+            <div class="d-flex gap-2">
+                <a class="button-primary px-3" href="logIn.html">Log in</a> 
+            </div>
+        </section> 
+    </header>
+    <main class="container">
+        <div class="form-section">
+            <h2 class="form-header h4">Register Form</h2> 
+            <div class="form-card"> 
+                <div class="description">
+                    <p>Enter your details to create an account</p>
+                </div>
+                <form aria-labelledby="formTitle" novalidate>
+                    <div class="credentials">
+                        <div class="container field-control">
+                            <div class="row input-wrapper">
+                                <span class="col-2 input-symbol">
+                                    <img src="assets/images/forms/mail-icon.svg" alt="" aria-hidden="true"/>
+                                </span>
+                                <label for="email" class="visually-hidden">Email Address</label>
+                                <input id="email" name="email" class="col field" type="email" placeholder="Email Address" required>
+                                <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                            </div>
+                        </div>
+                        <div class="container field-control">
+                            <div class="row input-wrapper">
+                                <span class="col-2 input-symbol">
+                                    <img src="assets/images/forms/person-icon.svg" alt="" aria-hidden="true"/>
+                                </span>
+                                <label for="name" class="visually-hidden">Name</label>
+                                <input id="name" name="name" class="col field" type="name" placeholder="Name" required>
+                                <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                            </div>
+                        </div>
+                        <div class="container field-control">
+                            <div class="row input-wrapper">
+                                <span class="col-2 input-symbol">
+                                    <img src="assets/images/forms/password-icon.svg" alt="" aria-hidden="true"/>
+                                </span>
+                                <label for="password" class="visually-hidden">Password</label>
+                                <input id="password" name="password" class="col field" type="password" placeholder="Password" required>
+                                <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                            </div>
+                        </div>
+                        <div class="container field-control">
+                            <div class="row input-wrapper">
+                                <span class="col-2 input-symbol">
+                                    <img src="assets/images/forms/password-icon.svg" alt="" aria-hidden="true"/>
+                                </span>
+                                <label for="confirmPassword" class="visually-hidden">Confirm password</label>
+                                <input id="confirmPassword" name="confirmPassword" class="col field" type="password" placeholder="Confirm Password" required>
+                                <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                            </div>
+                        </div>
+                        <button class="button-primary submit" type="submit">Sign up</button>
+                        <p class="forwarding">Already have an account? 
+                            <a href="logIn.html">Log in</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div> 
+    </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+<script src="index.js" charset="UTF-8"></script>
+</body>
+</html>

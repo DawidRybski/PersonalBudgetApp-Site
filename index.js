@@ -30,17 +30,45 @@ function addBlankFieldErrors(field, fieldPlaceholder){
     $(field).siblings(".error-icon").show();
 }
 
+function addConfirmPasswordMessage(confirmPasswordField){
+    var errorId = $(confirmPasswordField).attr("id") + "-error";
+    $(confirmPasswordField).attr("aria-describedby", errorId);
+    $(confirmPasswordField).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">Passwords do not match</p>');
+    $(confirmPasswordField).addClass("validate-border");
+    $(confirmPasswordField).siblings(".error-icon").show();
+}
+
+function checkPasswordConfirm(password, confirmPassword){
+    return password === confirmPassword;
+}
+
 function toggleEmailErrors(field){
     var value = $(field).val().trim();
     var noValidateMessage = $(field).closest(".field-control").find(".validation-message").length === 0;
-    var notEmailMessage = $(field).closest(".field-control").find(".validation-message").text();
+    var message = $(field).closest(".field-control").find(".validation-message").text();
 
-    if (notEmailMessage === "Looks like this is not an email") {
+    if (message === "Looks like this is not an email") {
         clearErrors($(field));
     }
 
     if (value !== "" && !emailReg.test(value) && noValidateMessage) {
         addWrongEmailPatternMessage($(field));
+    }
+}
+
+function toggleConfirmPasswordErrors(field){
+    var pass = $("#password").val().trim();
+    var confirmPass = $("#confirmPassword").val().trim();
+
+    var noValidateMessage = $(confirmPass).closest(".field-control").find(".validation-message").length === 0;
+    var message = $(field).closest(".field-control").find(".validation-message").text();
+
+    if (message === "Passwords do not match") {
+        clearErrors($(field));
+    }
+
+    if (confirmPass !== "" && !checkPasswordConfirm(pass, confirmPass) && noValidateMessage) {
+        addConfirmPasswordMessage($(field));
     }
 }
 
@@ -75,6 +103,10 @@ $(".field").on("input", function(){
 
     if ((idOfElement === "email")){
         toggleEmailErrors(this);
+    }
+
+    if ((idOfElement === "confirmPassword")){
+        toggleConfirmPasswordErrors(this);
     }
 
     updateButtonState();
