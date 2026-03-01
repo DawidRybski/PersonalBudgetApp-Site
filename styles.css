@@ -11,8 +11,11 @@
     --spacing-6: 2rem;
     --spacing-7: 3rem;
 
+<<<<<<< HEAD
     --hero-overlap: clamp(-14px, -2.5vw, -20px);
 
+=======
+>>>>>>> feature/log-in
     --primary-color: rgb(157, 73, 236);
     --secondary-color: rgb(207, 166, 245);
     --errors-color: rgb(255, 0, 0);
@@ -70,6 +73,7 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+<<<<<<< HEAD
     min-height: 100svh;
     margin: auto;
 }
@@ -104,6 +108,13 @@ main{
 }
 
 .form-card{
+=======
+    min-height: 100vh;
+    margin: auto;
+}
+
+.login-card{
+>>>>>>> feature/log-in
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -195,7 +206,11 @@ main{
     color: var(--secondary-color);
 }
 
+<<<<<<< HEAD
 .button-primary{
+=======
+.submit{
+>>>>>>> feature/log-in
     text-align: center;
     text-decoration: none;
     background: var(--gradient-active-button);
@@ -206,6 +221,7 @@ main{
     font-weight: var(--font-weight-semibold);
 }
 
+<<<<<<< HEAD
 .button-primary:not(:disabled):hover{
     box-shadow: var(--button-shadow);
 }
@@ -234,13 +250,30 @@ main{
     color: white;
 }
 
+=======
+.submit:not(:disabled):hover{
+    box-shadow: var(--button-shadow);
+}
+
+.submit:not(:disabled):active{
+    background: var(--gradient-pressed-button);
+}
+
+.submit:disabled{
+    background: var(--gradient-disabled-button);
+}
+
+>>>>>>> feature/log-in
 
 @media (min-width: 781px){
     .logo h1 br{
         display: none;
     }
+<<<<<<< HEAD
 
     .hero_content{
         transform: translateY(calc(var(--hero-overlap) - 12px));
     }
+=======
+>>>>>>> feature/log-in
 }
