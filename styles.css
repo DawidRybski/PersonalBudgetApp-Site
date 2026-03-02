@@ -75,7 +75,6 @@ main{
 }
 
 .hero{
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -84,11 +83,10 @@ main{
 }
 
 .hero_content{
-    position: relative;
     background-color: hsla(0, 0%, 100%, 0.712);
     max-width: 600px;
     padding: var(--spacing-5);
-    transform: translateY(var(--hero-overlap));
+    border-radius: var(--radius-card);
 }
 
 .hero_content h1{
@@ -238,9 +236,5 @@ main{
 @media (min-width: 781px){
     .logo h1 br{
         display: none;
-    }
-
-    .hero_content{
-        transform: translateY(calc(var(--hero-overlap) - 12px));
     }
 }
