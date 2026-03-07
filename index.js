@@ -111,3 +111,22 @@ $(".field").on("input", function(){
 
     updateButtonState();
 });
+
+$("#loginForm").on("submit", function(e){
+    e.preventDefault();
+
+    var validCredentials = true;
+    var blankField = false;
+    
+    $(".field").each(function (){
+        var value = $(this).val().trim();
+
+        if (value === "") {
+            blankField = true;
+        }
+    });
+
+    if (validCredentials && !blankField){
+        window.location.href = "homePage.html";
+    }
+});
