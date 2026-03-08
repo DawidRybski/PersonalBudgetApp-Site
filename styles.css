@@ -17,14 +17,13 @@
     --secondary-color: rgb(207, 166, 245);
     --errors-color: rgb(255, 0, 0);
     --navbar-button-color: rgba(11, 124, 39, 0.582);
-    --navbar-overlay-color: rgba(71, 55, 80, 0.664);
 
-    --user-bar-background: rgba(255,255,255,0.15);
+    --user-bar-background: rgba(255, 255, 255, 0.15);
     --user-bar-blur: blur(4px);
 
     --card-background: hsla(0, 0%, 100%, 0.712); 
 
-    --menu-button-background: rgba(207, 166, 245, 0.35);
+    --menu-button-background: rgba(136, 171, 247, 0.178);
     --button-shadow: 0 2px 10px hsla(283, 82%, 42%, 0.25);
 
     --gradient-active-button: linear-gradient( 
@@ -123,8 +122,10 @@ main{
     margin: auto;
 }
 
-
 .homePage-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
     width: 100%;
 }
 
@@ -162,7 +163,8 @@ main{
     background-color: var(--card-background);
     max-width: 600px;
     padding: var(--spacing-5);
-    border-radius: var(--radius-card);  
+    border-radius: var(--radius-card);
+    gap: var(--spacing-4);
 }
 
 .form-card{
@@ -281,9 +283,13 @@ main{
 }
 
 .button-outline{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     text-decoration: none;
     background: none;
+    gap: var(--spacing-1);
     border-radius: var(--radius-button);
     border: 1px solid var(--primary-color);
     padding: var(--spacing-1);
@@ -317,6 +323,7 @@ main{
 
 .menu-button{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -324,23 +331,43 @@ main{
     text-decoration: none;
     padding: var(--spacing-1) var(--spacing-2);
     width: 100%;
-    color: var(--accent-color)
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--radius-button);
 }
 
 .menu-button:hover {
-    background: var(--menu-button-background);
-    box-shadow: var(--button-shadow);
-    color: var(--primary-color) !important;
+    background: var(--background-color);
+    box-shadow: var(--shadow-color);
 }
 
-.menu-button[data-tone="income"]   { --accent-color: #1f9d39; }
-.menu-button[data-tone="expense"]  { --accent-color: #f05a28; }
-.menu-button[data-tone="balance"]  { --accent-color: #d89a00; }
-.menu-button[data-tone="settings"] { --accent-color: #2d5bff; }
-.menu-button[data-tone="logout"]   { --accent-color: #222; }
+.menu-button[data-tone="income"]   
+{ --accent-color: #1f9d39; 
+    --background-color: rgba(171, 247, 136, 0.178); 
+    --shadow-color: 0 2px 10px hsla(118, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="expense"]  
+{ 
+    --accent-color: #f05a28; 
+    --background-color: rgba(247, 136, 136, 0.178);
+    --shadow-color: 0 2px 10px hsla(0, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="balance"]  
+{ 
+    --accent-color: #d89a00; 
+    --background-color: rgba(247, 230, 136, 0.178);
+    --shadow-color: 0 2px 10px hsla(54, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="settings"] 
+{ 
+    --accent-color: #2d5bff; 
+    --background-color: rgba(136, 171, 247, 0.178);
+    --shadow-color: 0 2px 10px hsla(234, 82%, 42%, 0.25);
+}
 
 .menu-button span {
-    flex: 1;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-button:not(:disabled):hover{
@@ -370,7 +397,8 @@ main{
     }
 
     .menu{
-        width: 30%;
+        width: 20%;
+        min-width: 400px;
     }
 
     .open-menu{
