@@ -13,8 +13,8 @@
 
     --hero-overlap: clamp(-14px, -2.5vw, -20px);
 
-    --primary-color: rgb(157, 73, 236);
-    --secondary-color: rgb(207, 166, 245);
+    --primary-color: rgb(76, 88, 255);
+    --secondary-color: rgb(154, 143, 255);
     --errors-color: rgb(255, 0, 0);
     --navbar-button-color: rgba(11, 124, 39, 0.582);
 
@@ -24,18 +24,18 @@
     --card-background: hsla(0, 0%, 100%, 0.712); 
 
     --menu-button-background: rgba(136, 171, 247, 0.178);
-    --button-shadow: 0 2px 10px hsla(283, 82%, 42%, 0.25);
+    --button-shadow: 0 2px 10px hsla(241, 82%, 42%, 0.25);
 
     --gradient-active-button: linear-gradient( 
     to bottom, 
         var(--secondary-color) 0%, 
-        rgb(182, 115, 245) 90%, 
+        rgb(101, 99, 253) 90%, 
         var(--primary-color) 100%
     );
     --gradient-pressed-button: linear-gradient(
         to top,
         var(--secondary-color) 0%, 
-        rgb(182, 115, 245) 90%, 
+        rgb(101, 99, 253) 90%, 
         var(--primary-color) 100%
     );
     --gradient-disabled-button: linear-gradient(
@@ -46,7 +46,7 @@
     );
 
     --gradient-header: 
-    linear-gradient(330deg,var(--secondary-color) 0%, rgb(186, 112, 255) 53%, var(--primary-color) 100%);
+    linear-gradient(330deg,var(--secondary-color) 0%, rgb(101, 99, 253) 53%, var(--primary-color) 100%);
 
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -69,7 +69,7 @@ header{
     text-decoration: none;
 }
 
-.logo:hover{
+a.logo:hover{
     opacity: 0.9;
 }
 
@@ -206,7 +206,7 @@ main{
 
 .input-symbol{
     padding: var(--spacing-2) var(--spacing-1);
-    background-color: rgb(207, 166, 245);
+    background-color: var(--secondary-color);
     border-radius: var(--radius-field) 0 0 var(--radius-field);
     text-align: center;
 }
@@ -360,9 +360,9 @@ main{
 }
 .menu-button[data-tone="settings"] 
 { 
-    --accent-color: #2d5bff; 
-    --background-color: rgba(136, 171, 247, 0.178);
-    --shadow-color: 0 2px 10px hsla(234, 82%, 42%, 0.25);
+    --accent-color: #9d49ec; 
+    --background-color: rgba(225, 136, 247, 0.178);
+    --shadow-color: 0 2px 10px hsla(288, 82%, 42%, 0.25);
 }
 
 .menu-button span {
