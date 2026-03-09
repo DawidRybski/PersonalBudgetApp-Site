@@ -14,10 +14,10 @@
 <body>
     <header class="p-3 mb-3"> 
         <div class="container d-flex align-items-center justify-content-between"> 
-            <div class="logo">
+            <a href="index.html" class="logo">
                 <img src="assets/images/piggy-bank-icon.svg" height="25px" alt="" aria-hidden="true"/>
                 <h1 class="h6">Budget <br>Manager</h1>   
-            </div>
+            </a>
             
             <div class="d-flex gap-2">
                 <a class="button-primary px-3" href="register.html">Sign up</a>
@@ -31,7 +31,7 @@
                 <div class="description">
                     <p>Enter your credentials to continue</p>
                 </div>
-                <form aria-labelledby="formTitle" novalidate>
+                <form id="loginForm" aria-labelledby="formTitle" novalidate>
                     <div class="credentials">
                         <div class="container field-control">
                             <div class="row input-wrapper">
@@ -57,7 +57,7 @@
                                 <label class="form-check-label" for="rememberMe">Remember me</label>
                             </div>
                         </div>
-                        <button class="button-primary submit" type="submit">Log in</button>
+                        <button class="button-primary submit logIn" type="submit">Log in</button>
                         <p class="forwarding">Don't have an account? 
                             <a href="register.html">Sign up</a>
                         </p>

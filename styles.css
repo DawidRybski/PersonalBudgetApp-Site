@@ -13,22 +13,29 @@
 
     --hero-overlap: clamp(-14px, -2.5vw, -20px);
 
-    --primary-color: rgb(157, 73, 236);
-    --secondary-color: rgb(207, 166, 245);
+    --primary-color: rgb(76, 88, 255);
+    --secondary-color: rgb(154, 143, 255);
     --errors-color: rgb(255, 0, 0);
+    --navbar-button-color: rgba(11, 124, 39, 0.582);
 
-    --button-shadow: 0 2px 10px hsla(283, 82%, 42%, 0.25);
+    --user-bar-background: rgba(255, 255, 255, 0.15);
+    --user-bar-blur: blur(4px);
+
+    --card-background: hsla(0, 0%, 100%, 0.712); 
+
+    --menu-button-background: rgba(136, 171, 247, 0.178);
+    --button-shadow: 0 2px 10px hsla(241, 82%, 42%, 0.25);
 
     --gradient-active-button: linear-gradient( 
     to bottom, 
         var(--secondary-color) 0%, 
-        rgb(182, 115, 245) 90%, 
+        rgb(101, 99, 253) 90%, 
         var(--primary-color) 100%
     );
     --gradient-pressed-button: linear-gradient(
         to top,
         var(--secondary-color) 0%, 
-        rgb(182, 115, 245) 90%, 
+        rgb(101, 99, 253) 90%, 
         var(--primary-color) 100%
     );
     --gradient-disabled-button: linear-gradient(
@@ -39,7 +46,7 @@
     );
 
     --gradient-header: 
-    linear-gradient(330deg,var(--secondary-color) 0%, rgb(186, 112, 255) 53%, var(--primary-color) 100%);
+    linear-gradient(330deg,var(--secondary-color) 0%, rgb(101, 99, 253) 53%, var(--primary-color) 100%);
 
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -49,15 +56,56 @@ header{
     background: var(--gradient-header);
 }
 
+.header-container{
+    padding-left:1rem;
+    padding-right:1rem;
+}
+
 .logo{
     display: flex;
     align-items: center;
     gap: var(--spacing-1);
     color: white;
+    text-decoration: none;
+}
+
+a.logo:hover{
+    opacity: 0.9;
 }
 
 .logo h1{
     margin: 0;
+}
+
+.open-menu{
+    border: none;
+    background: none;
+}
+
+.offcanvas{
+    background: var(--gradient-header);
+}
+
+ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-bar{
+    display: inline-flex;
+
+    background: var(--user-bar-background);
+    color: white;
+
+    padding: var(--spacing-1) var(--spacing-1);
+    border-radius: 0 0 var(--radius-card) 0;
+
+    backdrop-filter: var(--user-bar-blur);
+}
+
+.user-bar-text{
+    color: white
 }
 
 body{
@@ -74,6 +122,13 @@ main{
     margin: auto;
 }
 
+.homePage-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+}
+
 .hero{
     display: flex;
     flex-direction: column;
@@ -82,23 +137,34 @@ main{
     padding: var(--spacing-6);
 }
 
-.hero_content{
-    background-color: hsla(0, 0%, 100%, 0.712);
+.hero_card{
+    background-color: var(--card-background);
     max-width: 600px;
     padding: var(--spacing-5);
     border-radius: var(--radius-card);
 }
 
-.hero_content h1{
+.hero_card h1{
     color: var(--primary-color);
 }
 
-.hero_content p{
+.hero_card p{
     text-align: justify;
 }
 
-.hero_content span{
+.hero_card span{
     color: var(--primary-color);
+}
+
+.menu-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--card-background);
+    max-width: 600px;
+    padding: var(--spacing-5);
+    border-radius: var(--radius-card);
+    gap: var(--spacing-4);
 }
 
 .form-card{
@@ -140,7 +206,7 @@ main{
 
 .input-symbol{
     padding: var(--spacing-2) var(--spacing-1);
-    background-color: rgb(207, 166, 245);
+    background-color: var(--secondary-color);
     border-radius: var(--radius-field) 0 0 var(--radius-field);
     text-align: center;
 }
@@ -217,9 +283,13 @@ main{
 }
 
 .button-outline{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     text-decoration: none;
     background: none;
+    gap: var(--spacing-1);
     border-radius: var(--radius-button);
     border: 1px solid var(--primary-color);
     padding: var(--spacing-1);
@@ -232,9 +302,111 @@ main{
     color: white;
 }
 
+.navbar-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-1);
+    text-align: center;
+    text-decoration: none;
+    background: none;
+    border: none;
+    color: white;
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-button);
+    white-space: nowrap;
+}
 
-@media (min-width: 781px){
+.menu-list {
+    width: 100%;
+}
+
+.menu-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-1);
+    text-decoration: none;
+    padding: var(--spacing-1) var(--spacing-2);
+    width: 100%;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--radius-button);
+}
+
+.menu-button:hover {
+    background: var(--background-color);
+    box-shadow: var(--shadow-color);
+}
+
+.menu-button[data-tone="income"]   
+{ --accent-color: #1f9d39; 
+    --background-color: rgba(171, 247, 136, 0.178); 
+    --shadow-color: 0 2px 10px hsla(118, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="expense"]  
+{ 
+    --accent-color: #f05a28; 
+    --background-color: rgba(247, 136, 136, 0.178);
+    --shadow-color: 0 2px 10px hsla(0, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="balance"]  
+{ 
+    --accent-color: #d89a00; 
+    --background-color: rgba(247, 230, 136, 0.178);
+    --shadow-color: 0 2px 10px hsla(54, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="settings"] 
+{ 
+    --accent-color: #9d49ec; 
+    --background-color: rgba(225, 136, 247, 0.178);
+    --shadow-color: 0 2px 10px hsla(288, 82%, 42%, 0.25);
+}
+
+.menu-button span {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-button:not(:disabled):hover{
+    background: var(--navbar-button-color);
+}
+
+@media (min-width: 768px){
     .logo h1 br{
         display: none;
+    }
+
+    .nav-menu{
+        display: flex;
+        flex-direction: row;
+        gap: var(--spacing-2);
+
+        position: static;
+        background: none;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .offcanvas{
+        background: none;
+    }
+
+    .menu{
+        width: 20%;
+        min-width: 400px;
+    }
+
+    .open-menu{
+        display: none;
+    }
+
+    .header-container{
+        padding-left: var(--spacing-6);
+        padding-right: var(--spacing-6);
     }
 }
