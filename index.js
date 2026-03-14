@@ -1,5 +1,29 @@
 var emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+function getCurrentDate(){
+    var date = new Date();
+    var day = String(date.getDate()).padStart(2, "0");
+    var month = String((date.getMonth()+1)).padStart(2, "0");
+    var year = date.getFullYear();
+
+    return year + "-" + month + "-" + day;
+}
+
+function getFieldLabel(field) {
+    var id = $(field).attr("id");
+    var labelText = $('label[for="' + id + '"]').text().trim();
+
+    if (labelText) return labelText;
+
+    return (
+        $(field).attr("placeholder") ||
+        $(field).data("label") ||
+        $(field).attr("name") ||
+        $(field).attr("id") ||
+        "This field"
+    );
+}
+
 function updateButtonState() {
     if ($(".validation-message").length) {
         $("button").prop("disabled", true);
@@ -23,10 +47,11 @@ function addWrongEmailPatternMessage(emailField){
     $(emailField).siblings(".error-icon").show();
 }
 
-function addBlankFieldErrors(field, fieldPlaceholder){
+function addBlankFieldErrors(field, fieldLabel){
     var errorId = $(field).attr("id") + "-error";
     $(field).attr("aria-describedby", errorId);
-    $(field).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">'+ fieldPlaceholder +' cannot be empty</p>');
+    $(field).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">'+ fieldLabel +' cannot be empty</p>');
+    $(field).addClass("validate-border");
     $(field).siblings(".error-icon").show();
 }
 
@@ -73,21 +98,19 @@ function toggleConfirmPasswordErrors(field){
 }
 
 
-$(".submit").on("click", function(){  
+$(".submit").on("click", function(){    
     $(".field").each(function (){
-        var fieldPlaceholder = $(this).attr("placeholder");
+        var fieldLabel = getFieldLabel(this);
         var hasBlankValidate = $(this).closest(".field-control").find(".validation-message").length;
-        var value = $(this).val().trim();
+        var value = ($(this).val() || "").trim();
 
         if (value === "") {
             if (!hasBlankValidate){
-                addBlankFieldErrors(this, fieldPlaceholder);
+                addBlankFieldErrors(this, fieldLabel);
             }
-
-            $(this).addClass("validate-border");
         }
 
-    updateButtonState();
+        updateButtonState();
     });
 });
 
@@ -130,3 +153,5 @@ $("#loginForm").on("submit", function(e){
         window.location.href = "homePage.html";
     }
 });
+
+$("#expenseDate").attr("value", getCurrentDate());

@@ -15,6 +15,8 @@
 
     --primary-color: rgb(76, 88, 255);
     --secondary-color: rgb(154, 143, 255);
+    --field-color: rgb(211, 211, 211);
+    --dropdown-color: rgb(117, 117, 117);
     --errors-color: rgb(255, 0, 0);
     --navbar-button-color: rgba(11, 124, 39, 0.582);
 
@@ -176,7 +178,7 @@ main{
     border-radius: 0 0 var(--radius-card) var(--radius-card);
 }
 
-.credentials{
+.fields{
     display: flex;
     flex-direction: column;
     gap: var(--spacing-4);
@@ -212,7 +214,7 @@ main{
 }
 
 .field{
-    border: 1px solid lightgray;
+    border: 1px solid var(--field-color);
     padding: var(--spacing-2);
     border-radius: 0 var(--radius-field) var(--radius-field) 0;
     font-weight: var(--font-weight-semibold);
@@ -227,7 +229,7 @@ main{
 }
 
 .validate-border{
-    border: 1px solid var(--errors-color);
+    border: 1px solid var(--errors-color) !important;;
 }
 
 .validation-message{
@@ -373,6 +375,29 @@ main{
 .navbar-button:not(:disabled):hover{
     background: var(--navbar-button-color);
 }
+
+.select-field{
+    text-decoration: none;
+    background: none;
+    gap: var(--spacing-1);
+    border-radius: 0 var(--radius-button) var(--radius-button) 0;
+    border: 1px solid var(--field-color);
+    padding: var(--spacing-2);
+    font-weight: var(--font-weight-semibold);
+
+    cursor: pointer;
+}
+
+.select-field:invalid{
+    color: var(--dropdown-color);
+}
+
+.select-field:not(:disabled):hover{
+    border: 1px solid var(--secondary-color);
+    color: var(--primary-color);
+}
+
+
 
 @media (min-width: 768px){
     .logo h1 br{
