@@ -376,6 +376,12 @@ main{
     background: var(--navbar-button-color);
 }
 
+.navbar-button.active {
+    background: var(--navbar-button-color);
+    pointer-events: none;
+    cursor: default;
+}
+
 .select-field{
     text-decoration: none;
     background: none;
