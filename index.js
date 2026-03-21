@@ -97,6 +97,55 @@ function toggleConfirmPasswordErrors(field){
     }
 }
 
+function createExpensesChart(){
+    var categories = [];
+    var amounts = [];
+
+    var expenseCategories = $("#expenses .transactions-category");
+
+    expenseCategories.each(function(){
+        var categoryName = $(this).find(".category-header [data-category]").text().trim();
+        var categoryAmount = $(this).find(".category-header [data-amount]").data("amount");
+
+        categories.push(categoryName);
+        amounts.push(categoryAmount);
+    })
+
+    new Chart('expensesChart', {
+        type: 'pie',
+        data: {
+            labels: categories,
+            datasets: [
+                {
+                    data: amounts,
+                    label: "Expenses by category",
+                    backbroundColor:[
+                        "rgb(240, 90, 40)",
+                        "rgb(216, 154, 0)",
+                        "rgb(157, 73, 236)",
+                        "rgb(54, 162, 235)",
+                        "rgb(255, 99, 132)",
+                        "rgb(75, 192, 192)"
+                    ],
+                    hoverOffset: 8
+                }
+            ]
+        },
+        options : {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "left",
+                    labels: {
+                        color: "white",
+                        boxWidth: 15
+                    }
+                }   
+            }
+        }
+    });
+}   
+
 
 $(".submit").on("click", function(){    
     $(".field").each(function (){
@@ -155,3 +204,5 @@ $("#loginForm").on("submit", function(e){
 });
 
 $("#expenseDate").attr("value", getCurrentDate());
+
+createExpensesChart();

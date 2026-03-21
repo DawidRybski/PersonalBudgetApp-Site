@@ -115,7 +115,7 @@ body{
     font-family: "Poppins", sans-serif;
 }
 
-main{
+.main-centered{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -124,10 +124,33 @@ main{
     margin: auto;
 }
 
+.balance-main{
+    justify-content: flex-start;
+    align-items: stretch;
+    min-height: auto;
+    padding: var(--spacing-5) var(--spacing-4);
+}
+
+.balance-section{
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.transactions-category{
+    padding: var(--spacing-1) 0;
+     border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.chart-container{
+    max-width: 500px;
+    margin: 0 auto;
+}
+
 .homePage-menu {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: var(--spacing-4);
     width: 100%;
 }
 
