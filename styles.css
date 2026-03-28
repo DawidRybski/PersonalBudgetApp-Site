@@ -308,9 +308,6 @@ body{
 }
 
 .button-outline{
-    display: flex;
-    align-items: center;
-    justify-content: center;
     text-align: center;
     text-decoration: none;
     background: none;
