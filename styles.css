@@ -1,5 +1,5 @@
 :root{
-    --radius-card: 0.5rem;
+    --radius-card: 0.25rem;
     --radius-button: 0.25rem;
     --radius-field: 0.25rem;
 
@@ -115,7 +115,7 @@ body{
     font-family: "Poppins", sans-serif;
 }
 
-main{
+.main-centered{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -124,10 +124,33 @@ main{
     margin: auto;
 }
 
+.balance-main{
+    justify-content: flex-start;
+    align-items: stretch;
+    min-height: auto;
+    padding: var(--spacing-5) var(--spacing-4);
+}
+
+.balance-section{
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.transactions-category{
+    padding: var(--spacing-1) 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.chart-container{
+    max-width: 500px;
+    margin: 0 auto;
+}
+
 .homePage-menu {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: var(--spacing-4);
     width: 100%;
 }
 
@@ -285,9 +308,6 @@ main{
 }
 
 .button-outline{
-    display: flex;
-    align-items: center;
-    justify-content: center;
     text-align: center;
     text-decoration: none;
     background: none;
@@ -432,7 +452,7 @@ main{
         min-width: 400px;
     }
 
-    .open-menu{
+    .site-nav > .open-menu{
         display: none;
     }
 
