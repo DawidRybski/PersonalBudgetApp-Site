@@ -14,17 +14,17 @@
     <header class="py-3">
         <div class="container-fluid header-container d-flex align-items-center justify-content-between">
             <a href="homePage.html" class="logo">
-                <img src="assets/images/piggy-bank-icon.svg" height="25px"/>
-                <h1 class="h6">Budget <br>Manager</h1>   
+                <img src="assets/images/piggy-bank-icon.svg" height="25" alt="">
+                <span class="h6">Budget <br>Manager</span>   
             </a>
             <nav class="site-nav navbar-expand-md">
                 <button class="open-menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                     <img src="assets/images/navbar/menu.svg" alt="Open mobile menu">
                 </button>
-                <div class="offcanvas offcanvas-end offcanvas-md" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas offcanvas-end offcanvas-md" tabindex="-1" id="offcanvasRight" role="dialog">
                     <div class="offcanvas-header">
                         <div class="logo">
-                            <img src="assets/images/piggy-bank-icon.svg" height="25px"/>
+                            <img src="assets/images/piggy-bank-icon.svg" height="25" alt="">
                             <p class="h6">Budget <br>Manager</p>   
                         </div> 
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -33,31 +33,31 @@
                         <ul class="nav-menu">
                             <li class="nav-item">
                                 <a class="navbar-button" href="#">
-                                    <img src="assets/images/navbar/dollar-sign.svg" height="16px"/>
+                                    <img src="assets/images/navbar/dollar-sign.svg" height="16" alt="">
                                     <span>Add Income</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="addExpense.html">
-                                    <img src="assets/images/navbar/shopping-cart.svg" height="16px"/>
+                                    <img src="assets/images/navbar/shopping-cart.svg" height="16" alt="">
                                     <span>Add Expense</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button active" href="#">
-                                    <img src="assets/images/navbar/pie-chart.svg" height="16px"/>
+                                    <img src="assets/images/navbar/pie-chart.svg" height="16" alt="">
                                     <span>View Balance</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="#">
-                                    <img src="assets/images/navbar/settings.svg" height="16px"/>
+                                    <img src="assets/images/navbar/settings.svg" height="16" alt="">
                                     <span>Settings</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="index.html">
-                                    <img src="assets/images/navbar/log-out.svg" height="16px"/>
+                                    <img src="assets/images/navbar/log-out.svg" height="16" alt="">
                                     <span>Log out</span>
                                 </a>
                             </li>
@@ -112,9 +112,9 @@
             </div>
             <div class="row g-4">
                 <section class="col-12 col-lg-6 incomes-section" aria-labelledby="incomes-heading">
-                    <h2 class="form-header h4">Incomes</h2> 
+                    <h2 id="incomes-heading" class="form-header h4">Incomes</h2> 
                     <div class="form-card">
-                        <section id="incomes">
+                        <div id="incomes">
                             <ul class="incomes-list">
                                 <li class="transactions-category">
                                     <div class="category-header d-flex justify-content-between align-items-center">
@@ -134,10 +134,10 @@
                                             <div class="text-end">
                                                 <span class="text transaction-amount">500</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
                                         </li>
@@ -153,10 +153,10 @@
                                             <div class="text-end">
                                                 <span class="text transaction-amount">250</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
                                         </li>
@@ -172,10 +172,10 @@
                                             <div class="text-end">
                                                 <span class="text transaction-amount">150</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
                                         </li>
@@ -199,10 +199,10 @@
                                             <div class="text-end">
                                                 <span class="text transaction-amount" data-amount="5700">5700</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
                                         </li>
@@ -210,13 +210,13 @@
                                 </li>
 
                             </ul>
-                        </section>
+                        </div>
                     </div>
                 </section>
                 <section class="col-12 col-lg-6 expenses-section" aria-labelledby="expenses-heading">
-                    <h2 class="form-header h4">Expenses</h2> 
+                    <h2 id="expenses-heading" class="form-header h4">Expenses</h2> 
                     <div class="form-card"> 
-                        <section id="expenses">
+                        <div id="expenses">
                             <ul class="expenses-list">
                                 <li class="transactions-category">
                                     <div class="category-header d-flex justify-content-between align-items-center">
@@ -237,10 +237,10 @@
                                             <div class="text-end">
                                                 <span class="text-danger transaction-amount">-120</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button>
                                             </div>
                                         </li>
@@ -257,10 +257,10 @@
                                             <div class="text-end">
                                                 <span class="text-danger transaction-amount">-80</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button>
                                             </div>
                                         </li>
@@ -285,10 +285,10 @@
                                             <div class="text-end">
                                                 <span class="text-danger transaction-amount">-1500</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
                                         </li>
@@ -313,10 +313,10 @@
                                             <div class="text-end">
                                                 <span class="text-danger transaction-amount">-1800</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
                                         </li>
@@ -333,17 +333,17 @@
                                             <div class="text-end">
                                                 <span class="text-danger transaction-amount">-200</span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15px"/>
+                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15px"/>
+                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
-                        </section>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -371,21 +371,21 @@
                     <div class="container d-flex flex-column justify-content-start p-3">
                         <div class="row input-wrapper start-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/dollar-sign.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/dollar-sign.svg" alt="">
                             </span>
                             <label for="incomeAmount" class="visually-hidden">Amount</label>
-                            <input id="incomeAmount" name="amount" class="col field" type="number" placeholder="Amount" autocomplete="amount" inputmode="decimal" required>
+                            <input id="incomeAmount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/calendar.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/calendar.svg" alt="">
                             </span>
                             <label for="incomeDate" class="visually-hidden">Date</label>
                             <input id="incomeDate" name="date" class="col field" type="date" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/layers.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/layers.svg" alt="">
                             </span>
                             <label for="incomeCategory" class="visually-hidden">Category</label>
                             <select id="incomeCategory" name="category" class="col field select-field" required>
@@ -398,10 +398,10 @@
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/message-square.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/message-square.svg" alt="">
                             </span>
                             <label for="incomeComment" class="visually-hidden">Comment</label>
-                            <input id="incomeComment" name="comment" class="col field" type="text" placeholder="Comment" autocomplete="amount" required>
+                            <input id="incomeComment" name="comment" class="col field" type="text" placeholder="Comment" required>
                         </div>
                         <button type="button" class="btn button-primary edit-save-button">Save transaction</button>
                     </div>
@@ -418,21 +418,21 @@
                     <div class="container d-flex flex-column justify-content-start p-3">
                         <div class="row input-wrapper start-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/dollar-sign.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/dollar-sign.svg" alt="">
                             </span>
                             <label for="expenseAmount" class="visually-hidden">Amount</label>
-                            <input id="expenseAmount" name="amount" class="col field" type="number" placeholder="Amount" autocomplete="amount" inputmode="decimal" required>
+                            <input id="expenseAmount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/calendar.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/calendar.svg" alt="">
                             </span>
                             <label for="expenseDate" class="visually-hidden">Date</label>
                             <input id="expenseDate" name="date" class="col field" type="date" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/credit-card.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/credit-card.svg" alt="">
                             </span>
                             <label for="expensePaymentMethod" class="visually-hidden">Payment method</label>
                             <select id="expensePaymentMethod" name="paymentMethod" class="col field select-field" required>
@@ -444,7 +444,7 @@
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/layers.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/layers.svg" alt="">
                             </span>
                             <label for="expenseCategory" class="visually-hidden">Category</label>
                             <select id="expenseCategory" name="category" class="col field select-field" required>
@@ -470,10 +470,10 @@
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
-                                <img src="assets/images/forms/message-square.svg" alt="" aria-hidden="true"/>
+                                <img src="assets/images/forms/message-square.svg" alt="">
                             </span>
                             <label for="expenseComment" class="visually-hidden">Comment</label>
-                            <input id="expenseComment" name="comment" class="col field" type="text" placeholder="Comment" autocomplete="amount" required>
+                            <input id="expenseComment" name="comment" class="col field" type="text" placeholder="Comment" required>
                         </div>
                         <button type="button" class="btn button-primary edit-save-button">Save transaction</button>
                     </div>
@@ -511,9 +511,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="assets/js/validation.js" charset="UTF-8"></script>
-    <script src="assets/js/modals.js" charset="UTF-8"></script>
-    <script src="assets/js/balance.js" charset="UTF-8"></script>
-    <script src="assets/js/main.js" charset="UTF-8"></script>
+    <script src="assets/js/validation.js"></script>
+    <script src="assets/js/modals.js"></script>
+    <script src="assets/js/balance.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

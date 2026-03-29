@@ -15,18 +15,18 @@
     <header class="py-3"> 
         <div class="container-fluid header-container d-flex align-items-center justify-content-between"> 
             <div class="logo">
-                <img src="assets/images/piggy-bank-icon.svg" height="25px"/>
-                <h1 class="h6">Budget <br>Manager</h1>   
+                <img src="assets/images/piggy-bank-icon.svg" height="25" alt="">
+                <span class="h6">Budget <br>Manager</span>   
             </div> 
             <nav class="site-nav navbar-expand-md">
                 <button class="open-menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                     <img src="assets/images/navbar/menu.svg" alt="Open mobile menu">
                 </button>
-                <div class="offcanvas offcanvas-end offcanvas-md" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas offcanvas-end offcanvas-md" tabindex="-1" id="offcanvasRight" role="dialog">
                     <div class="offcanvas-header">
                         <div class="logo">
-                            <img src="assets/images/piggy-bank-icon.svg" height="25px"/>
-                            <p class="h6">Budget <br>Manager</p>   
+                            <img src="assets/images/piggy-bank-icon.svg" height="25">
+                            <span class="h6">Budget <br>Manager</span>   
                         </div> 
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
@@ -34,31 +34,31 @@
                         <ul class="nav-menu">
                             <li class="nav-item">
                                 <a class="navbar-button" href="#">
-                                    <img src="assets/images/navbar/dollar-sign.svg" height="16px"/>
+                                    <img src="assets/images/navbar/dollar-sign.svg" height="16" alt="">
                                     <span>Add Income</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="addExpense.html">
-                                    <img src="assets/images/navbar/shopping-cart.svg" height="16px"/>
+                                    <img src="assets/images/navbar/shopping-cart.svg" height="16" alt="">
                                     <span>Add Expense</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="viewBalance.html">
-                                    <img src="assets/images/navbar/pie-chart.svg" height="16px"/>
+                                    <img src="assets/images/navbar/pie-chart.svg" height="16" alt="">
                                     <span>View Balance</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="#">
-                                    <img src="assets/images/navbar/settings.svg" height="16px"/>
+                                    <img src="assets/images/navbar/settings.svg" height="16" alt="">
                                     <span>Settings</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="index.html">
-                                    <img src="assets/images/navbar/log-out.svg" height="16px"/>
+                                    <img src="assets/images/navbar/log-out.svg" height="16" alt="">
                                     <span>Log out</span>
                                 </a>
                             </li>
@@ -78,39 +78,39 @@
     </div>
     <main class="main-centered">
         <section class="menu m-3">
-            <img class="menu_img" src="assets/images/wallet.svg" alt=""/>
+            <img class="menu_img" src="assets/images/wallet.svg" alt="" aria-hidden="true">
             <div class="container menu-card">
                 <h1 class="h4">Hello <span>Dawid</span>!</h1>
                 <p>What do you want to do?</p>
                 <div class="homePage-menu">
                     <a class="menu-button p-3" data-tone="income" href="#">
-                        <img src="assets/images/menu/dollar-sign.svg" height="40px"/>
+                        <img src="assets/images/menu/dollar-sign.svg" height="40" alt="">
                         <span>Add Income</span>
                     </a>
                     <a class="menu-button p-3" data-tone="expense" href="addExpense.html">
-                        <img src="assets/images/menu/shopping-cart.svg" height="40px"/>
+                        <img src="assets/images/menu/shopping-cart.svg" height="40" alt="">
                         <span>Add Expense</span>
                     </a>
                     <a class="menu-button p-3" data-tone="balance" href="viewBalance.html">
-                        <img src="assets/images/menu/pie-chart.svg" height="40px"/>
+                        <img src="assets/images/menu/pie-chart.svg" height="40" alt="">
                         <span>View Balance</span>
                     </a>
                     <a class="menu-button p-3" data-tone="settings" href="#">
-                        <img src="assets/images/menu/settings.svg" height="40px"/>
+                        <img src="assets/images/menu/settings.svg" height="40" alt="">
                         <span>Settings</span>
                     </a>
                 </div>
                 <a class="button-outline p-2" data-tone="logout" href="index.html">
-                        <img src="assets/images/menu/log-out.svg" height="16px"/>
+                        <img src="assets/images/menu/log-out.svg" height="16" alt="">
                         <span>Log out</span>
                 </a>
             </div>
         </section>
     </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>    
-<script src="assets/js/validation.js" charset="UTF-8"></script>
-<script src="assets/js/modals.js" charset="UTF-8"></script>
-<script src="assets/js/balance.js" charset="UTF-8"></script>
-<script src="assets/js/main.js" charset="UTF-8"></script>
+<script src="assets/js/validation.js"></script>
+<script src="assets/js/modals.js"></script>
+<script src="assets/js/balance.js"></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
