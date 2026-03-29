@@ -121,14 +121,6 @@ function createExpensesChart(){
                 {
                     data: amounts,
                     label: "Expenses by category",
-                    backbroundColor:[
-                        "rgb(240, 90, 40)",
-                        "rgb(216, 154, 0)",
-                        "rgb(157, 73, 236)",
-                        "rgb(54, 162, 235)",
-                        "rgb(255, 99, 132)",
-                        "rgb(75, 192, 192)"
-                    ],
                     hoverOffset: 8
                 }
             ]
