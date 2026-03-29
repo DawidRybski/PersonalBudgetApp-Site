@@ -181,7 +181,7 @@ function checkIfExpenseDataChanged(){
         !category ||
         !paymentMethod;
 
-    $("editExpenseModal .edit-save-button").prop("disabled", isSame || hasEmptyFields);
+    $("#editExpenseModal .edit-save-button").prop("disabled", isSame || hasEmptyFields);
 }
 
 function getExpenseDataForModal(){
