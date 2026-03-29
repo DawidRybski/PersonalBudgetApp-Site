@@ -1,4 +1,6 @@
 var emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+var initialExpenseData = {};
+var initialIncomeData = {};
 
 function getCurrentDate(){
     var date = new Date();
@@ -26,9 +28,9 @@ function getFieldLabel(field) {
 
 function updateButtonState() {
     if ($(".validation-message").length) {
-        $("button").prop("disabled", true);
+        $(".submit").prop("disabled", true);
     } else {
-        $("button").prop("disabled", false);
+        $(".submit").prop("disabled", false);
     }
 }
 
@@ -144,8 +146,71 @@ function createExpensesChart(){
             }
         }
     });
-}   
+}
 
+function showEditToast(){
+    const toastTrigger = $(".edit-save-button");
+    const toast = document.getElementById('editToast');
+
+    if (toastTrigger.length && toast) {
+        const toastEdit = bootstrap.Toast.getOrCreateInstance(toast);
+        
+        toastTrigger.on("click", function (){
+            toastEdit.show();
+        });
+    }
+}
+
+function checkIfModalDataChanged(){
+    const amount = $("#editExpenseModal #amount").val();
+    const date = $("#editExpenseModal #transactionDate").val();
+    const paymentMethod = $("#editExpenseModal #paymentMethod").val();
+    const category = $("#editExpenseModal #category").val();
+    const comment = $("#editExpenseModal #comment").val();
+
+     const isSame = amount === String(initialExpenseData.amount) && 
+        date === String(initialExpenseData.date) &&
+        comment === String(initialExpenseData.comment) &&
+        category === String(initialExpenseData.category) &&
+        paymentMethod === String(initialExpenseData.paymentMethod);
+
+    const hasEmptyFields =
+        amount === "" ||
+        date === "" ||
+        comment === "" ||
+        !category ||
+        !paymentMethod;
+
+    $(".edit-save-button").prop("disabled", isSame || hasEmptyFields);
+}
+
+function getExpenseDataForModal(){
+    $(".expenses-list").on("click", 'button[data-bs-target="#editExpenseModal"]', function () {
+        const transactionItem = $(this).closest(".transaction-item");
+
+        initialExpenseData = {
+            amount: transactionItem.data("amount"),
+            date: transactionItem.data("date"),
+            comment: transactionItem.data("comment"),
+            category: transactionItem.data("category"),
+            paymentMethod: transactionItem.data("payment-method")
+        };
+
+        $("#editExpenseModal #amount").val(transactionItem.data("amount"));
+        $("#editExpenseModal #transactionDate").val(transactionItem.data("date"));
+        $("#editExpenseModal #paymentMethod").val(transactionItem.data("payment-method"));
+        $("#editExpenseModal #category").val(transactionItem.data("category"));
+        $("#editExpenseModal #comment").val(transactionItem.data("comment"));
+
+        checkIfModalDataChanged();
+    });
+}
+
+function closeExpenseModal() {
+    const expenseModal = document.getElementById("editExpenseModal");
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(expenseModal);
+    modalInstance.hide();
+}
 
 $(".submit").on("click", function(){    
     $(".field").each(function (){
@@ -206,3 +271,13 @@ $("#loginForm").on("submit", function(e){
 $("#expenseDate").attr("value", getCurrentDate());
 
 createExpensesChart();
+showEditToast();
+getExpenseDataForModal();
+
+$("#editExpenseModal").on("input change", ".field, select", function () {
+    checkIfModalDataChanged();
+});
+
+$("#editExpenseModal .edit-save-button").on("click", function () {
+    closeExpenseModal();
+});
