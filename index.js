@@ -161,7 +161,7 @@ function showEditToast(){
     }
 }
 
-function checkIfModalDataChanged(){
+function checkIfExpenseDataChanged(){
     const amount = $("#editExpenseModal #amount").val();
     const date = $("#editExpenseModal #transactionDate").val();
     const paymentMethod = $("#editExpenseModal #paymentMethod").val();
@@ -181,7 +181,7 @@ function checkIfModalDataChanged(){
         !category ||
         !paymentMethod;
 
-    $(".edit-save-button").prop("disabled", isSame || hasEmptyFields);
+    $("editExpenseModal .edit-save-button").prop("disabled", isSame || hasEmptyFields);
 }
 
 function getExpenseDataForModal(){
@@ -202,15 +202,110 @@ function getExpenseDataForModal(){
         $("#editExpenseModal #category").val(transactionItem.data("category"));
         $("#editExpenseModal #comment").val(transactionItem.data("comment"));
 
-        checkIfModalDataChanged();
+        checkIfExpenseDataChanged();
     });
 }
 
-function closeExpenseModal() {
-    const expenseModal = document.getElementById("editExpenseModal");
-    const modalInstance = bootstrap.Modal.getOrCreateInstance(expenseModal);
-    modalInstance.hide();
+function checkIfIncomeDataChanged(){
+    const amount = $("#editIncomeModal #amount").val();
+    const date = $("#editIncomeModal #transactionDate").val();
+    const category = $("#editIncomeModal #category").val();
+    const comment = $("#editIncomeModal #comment").val();
+
+     const isSame = amount === String(initialIncomeData.amount) && 
+        date === String(initialIncomeData.date) &&
+        comment === String(initialIncomeData.comment) &&
+        category === String(initialIncomeData.category);
+
+    const hasEmptyFields =
+        amount === "" ||
+        date === "" ||
+        comment === "" ||
+        !category;
+
+    $("#editIncomeModal .edit-save-button").prop("disabled", isSame || hasEmptyFields);
 }
+
+function getIncomeDataForModal(){
+    $(".incomes-list").on("click", 'button[data-bs-target="#editIncomeModal"]', function () {
+        const transactionItem = $(this).closest(".transaction-item");
+
+        initialIncomeData = {
+            amount: transactionItem.data("amount"),
+            date: transactionItem.data("date"),
+            comment: transactionItem.data("comment"),
+            category: transactionItem.data("category")
+        };
+
+        $("#editIncomeModal #amount").val(transactionItem.data("amount"));
+        $("#editIncomeModal #transactionDate").val(transactionItem.data("date"));
+        $("#editIncomeModal #category").val(transactionItem.data("category"));
+        $("#editIncomeModal #comment").val(transactionItem.data("comment"));
+
+        checkIfIncomeDataChanged();
+    });
+}
+
+function closeEditModal() {
+    const expenseModal = document.getElementById("editExpenseModal");
+    const incomeModal = document.getElementById("editIncomeModal");
+    
+    if (expenseModal){
+        const expenseModalInstance = bootstrap.Modal.getOrCreateInstance(expenseModal);
+        expenseModalInstance.hide();
+    }
+
+    if (incomeModal){
+        const incomeModalInstance = bootstrap.Modal.getOrCreateInstance(incomeModal);
+        incomeModalInstance.hide();
+    }
+}
+
+function sortTransactionsByDate(container) {
+    const items = Array.from(container.querySelectorAll('.transaction-item'));
+
+    items.sort((a, b) => {
+        const dateA = new Date(a.dataset.date);
+        const dateB = new Date(b.dataset.date);
+        return dateA - dateB; // rosnąco (od najstarszej)
+        // return dateB - dateA; // jeśli chcesz od najnowszej
+    });
+
+    items.forEach(item => container.appendChild(item));
+}
+
+function sortCategories(container) {
+    const categories = Array.from(container.querySelectorAll('.transactions-category'));
+
+    categories.sort((a, b) => {
+        const nameA = a.querySelector('[data-category]').dataset.category.toLowerCase();
+        const nameB = b.querySelector('[data-category]').dataset.category.toLowerCase();
+
+        return nameA.localeCompare(nameB);
+    });
+
+    categories.forEach(cat => container.appendChild(cat));
+}
+
+function sortAll() {
+    // INCOMES
+    const incomesContainer = document.querySelector('.incomes-list');
+    sortCategories(incomesContainer);
+
+    incomesContainer.querySelectorAll('.transactions-list').forEach(list => {
+        sortTransactionsByDate(list);
+    });
+
+    // EXPENSES
+    const expensesContainer = document.querySelector('.expenses-list');
+    sortCategories(expensesContainer);
+
+    expensesContainer.querySelectorAll('.transactions-list').forEach(list => {
+        sortTransactionsByDate(list);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', sortAll);
 
 $(".submit").on("click", function(){    
     $(".field").each(function (){
@@ -273,11 +368,20 @@ $("#expenseDate").attr("value", getCurrentDate());
 createExpensesChart();
 showEditToast();
 getExpenseDataForModal();
+getIncomeDataForModal();
 
 $("#editExpenseModal").on("input change", ".field, select", function () {
-    checkIfModalDataChanged();
+    checkIfExpenseDataChanged();
+});
+
+$("#editIncomeModal").on("input change", ".field, select", function () {
+    checkIfIncomeDataChanged();
 });
 
 $("#editExpenseModal .edit-save-button").on("click", function () {
-    closeExpenseModal();
+    closeEditModal();
+});
+
+$("#editIncomeModal .edit-save-button").on("click", function () {
+    closeEditModal();
 });
