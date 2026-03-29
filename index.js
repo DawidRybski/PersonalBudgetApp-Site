@@ -261,6 +261,37 @@ function closeEditModal() {
     }
 }
 
+function calculateBalance(){
+    const incomeItems = Array.from(document.querySelectorAll('.incomes-list .transaction-item[data-amount]'));
+    const expenseItems = Array.from(document.querySelectorAll('.expenses-list .transaction-item[data-amount]'));
+    
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    incomeItems.forEach(item => totalIncome += Number(item.dataset.amount));
+    expenseItems.forEach(item => totalExpense += Number(item.dataset.amount));
+
+    const balance = totalIncome - totalExpense;
+    return balance;
+}
+
+function addBalanceInfo(){
+    const totalBalance = calculateBalance();
+    const balanceElement = $(".total-balance span[data-amount]");
+    const messageElement = $(".total-balance p");
+
+    balanceElement.text(totalBalance);
+    balanceElement.attr("data-amount", totalBalance);
+
+    if (totalBalance > 0){
+        messageElement.text("You are managing your finances very well.").removeClass("text-danger").addClass("text-success");
+    } else if (totalBalance < 0){
+        messageElement.text("Be careful! You are getting into debt.").removeClass("text-success").addClass("text-danger");
+    } else {
+        messageElement.text("Your balance is zero.").removeClass("text-success text-danger");
+    }
+}
+
 function sortTransactionsByDate(container) {
     const items = Array.from(container.querySelectorAll('.transaction-item'));
 
@@ -369,6 +400,7 @@ createExpensesChart();
 showEditToast();
 getExpenseDataForModal();
 getIncomeDataForModal();
+addBalanceInfo();
 
 $("#editExpenseModal").on("input change", ".field, select", function () {
     checkIfExpenseDataChanged();
