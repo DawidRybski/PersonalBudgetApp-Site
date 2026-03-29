@@ -162,11 +162,11 @@ function showEditToast(){
 }
 
 function checkIfExpenseDataChanged(){
-    const amount = $("#editExpenseModal #amount").val();
-    const date = $("#editExpenseModal #transactionDate").val();
-    const paymentMethod = $("#editExpenseModal #paymentMethod").val();
-    const category = $("#editExpenseModal #category").val();
-    const comment = $("#editExpenseModal #comment").val();
+    const amount = $("#editExpenseModal #expenseAmount").val();
+    const date = $("#editExpenseModal #expenseDate").val();
+    const paymentMethod = $("#editExpenseModal #expensePaymentMethod").val();
+    const category = $("#editExpenseModal #expenseCategory").val();
+    const comment = $("#editExpenseModal #expenseComment").val();
 
      const isSame = amount === String(initialExpenseData.amount) && 
         date === String(initialExpenseData.date) &&
@@ -196,21 +196,21 @@ function getExpenseDataForModal(){
             paymentMethod: transactionItem.data("payment-method")
         };
 
-        $("#editExpenseModal #amount").val(transactionItem.data("amount"));
-        $("#editExpenseModal #transactionDate").val(transactionItem.data("date"));
-        $("#editExpenseModal #paymentMethod").val(transactionItem.data("payment-method"));
-        $("#editExpenseModal #category").val(transactionItem.data("category"));
-        $("#editExpenseModal #comment").val(transactionItem.data("comment"));
+        $("#editExpenseModal #expenseAmount").val(transactionItem.data("amount"));
+        $("#editExpenseModal #expenseDate").val(transactionItem.data("date"));
+        $("#editExpenseModal #expensePaymentMethod").val(transactionItem.data("payment-method"));
+        $("#editExpenseModal #expenseCategory").val(transactionItem.data("category"));
+        $("#editExpenseModal #expenseComment").val(transactionItem.data("comment"));
 
         checkIfExpenseDataChanged();
     });
 }
 
 function checkIfIncomeDataChanged(){
-    const amount = $("#editIncomeModal #amount").val();
-    const date = $("#editIncomeModal #transactionDate").val();
-    const category = $("#editIncomeModal #category").val();
-    const comment = $("#editIncomeModal #comment").val();
+    const amount = $("#editIncomeModal #incomeAmount").val();
+    const date = $("#editIncomeModal #incomeDate").val();
+    const category = $("#editIncomeModal #incomeCategory").val();
+    const comment = $("#editIncomeModal #incomeComment").val();
 
      const isSame = amount === String(initialIncomeData.amount) && 
         date === String(initialIncomeData.date) &&
@@ -237,10 +237,10 @@ function getIncomeDataForModal(){
             category: transactionItem.data("category")
         };
 
-        $("#editIncomeModal #amount").val(transactionItem.data("amount"));
-        $("#editIncomeModal #transactionDate").val(transactionItem.data("date"));
-        $("#editIncomeModal #category").val(transactionItem.data("category"));
-        $("#editIncomeModal #comment").val(transactionItem.data("comment"));
+        $("#editIncomeModal #incomeAmount").val(transactionItem.data("amount"));
+        $("#editIncomeModal #incomeDate").val(transactionItem.data("date"));
+        $("#editIncomeModal #incomeCategory").val(transactionItem.data("category"));
+        $("#editIncomeModal #incomeComment").val(transactionItem.data("comment"));
 
         checkIfIncomeDataChanged();
     });

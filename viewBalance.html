@@ -373,23 +373,22 @@
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/dollar-sign.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="amount" class="visually-hidden">Amount</label>
-                            <input id="amount" name="amount" class="col field" type="number" placeholder="Amount" autocomplete="amount" inputmode="decimal" required>
-                            <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                            <label for="incomeAmount" class="visually-hidden">Amount</label>
+                            <input id="incomeAmount" name="amount" class="col field" type="number" placeholder="Amount" autocomplete="amount" inputmode="decimal" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/calendar.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="transactionDate" class="visually-hidden">Date</label>
-                            <input id="transactionDate" name="date" class="col field" type="date" required>
+                            <label for="incomeDate" class="visually-hidden">Date</label>
+                            <input id="incomeDate" name="date" class="col field" type="date" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/layers.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="category" class="visually-hidden">Category</label>
-                            <select id="category" name="category" class="col field select-field" required>
+                            <label for="incomeCategory" class="visually-hidden">Category</label>
+                            <select id="incomeCategory" name="category" class="col field select-field" required>
                                 <option value="" selected disabled hidden>Category</option>
                                 <option value="allegro-sale">Allegro sale</option>
                                 <option value="salary">Salary</option>
@@ -401,9 +400,8 @@
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/message-square.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="comment" class="visually-hidden">Comment</label>
-                            <input id="comment" name="comment" class="col field" type="text" placeholder="Comment" autocomplete="amount" required>
-                            <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                            <label for="incomeComment" class="visually-hidden">Comment</label>
+                            <input id="incomeComment" name="comment" class="col field" type="text" placeholder="Comment" autocomplete="amount" required>
                         </div>
                         <button type="button" class="btn button-primary edit-save-button">Save transaction</button>
                     </div>
@@ -422,23 +420,22 @@
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/dollar-sign.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="amount" class="visually-hidden">Amount</label>
-                            <input id="amount" name="amount" class="col field" type="number" placeholder="Amount" autocomplete="amount" inputmode="decimal" required>
-                            <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                            <label for="expenseAmount" class="visually-hidden">Amount</label>
+                            <input id="expenseAmount" name="amount" class="col field" type="number" placeholder="Amount" autocomplete="amount" inputmode="decimal" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/calendar.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="transactionDate" class="visually-hidden">Date</label>
-                            <input id="transactionDate" name="date" class="col field" type="date" required>
+                            <label for="expenseDate" class="visually-hidden">Date</label>
+                            <input id="expenseDate" name="date" class="col field" type="date" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/credit-card.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="paymentMethod" class="visually-hidden">Payment method</label>
-                            <select id="paymentMethod" name="paymentMethod" class="col field select-field" required>
+                            <label for="expensePaymentMethod" class="visually-hidden">Payment method</label>
+                            <select id="expensePaymentMethod" name="paymentMethod" class="col field select-field" required>
                                 <option value="" selected disabled hidden>Payment method</option>
                                 <option class="dropdown-item" value="cash">Cash</option>
                                 <option class="dropdown-item" value="credit-card">Credit card</option>
@@ -449,8 +446,8 @@
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/layers.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="category" class="visually-hidden">Category</label>
-                            <select id="category" name="category" class="col field select-field" required>
+                            <label for="expenseCategory" class="visually-hidden">Category</label>
+                            <select id="expenseCategory" name="category" class="col field select-field" required>
                                 <option value="" selected disabled hidden>Category</option>
                                 <option value="food">Food</option>
                                 <option value="apartment">Apartment</option>
@@ -475,9 +472,8 @@
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/message-square.svg" alt="" aria-hidden="true"/>
                             </span>
-                            <label for="comment" class="visually-hidden">Comment</label>
-                            <input id="comment" name="comment" class="col field" type="text" placeholder="Comment" autocomplete="amount" required>
-                            <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                            <label for="expenseComment" class="visually-hidden">Comment</label>
+                            <input id="expenseComment" name="comment" class="col field" type="text" placeholder="Comment" autocomplete="amount" required>
                         </div>
                         <button type="button" class="btn button-primary edit-save-button">Save transaction</button>
                     </div>
