@@ -1,0 +1,115 @@
+.button-primary{
+    text-align: center;
+    text-decoration: none;
+    background: var(--gradient-active-button);
+    border-radius: var(--radius-button);
+    border: 1px solid var(--secondary-color);
+    padding: var(--spacing-1);
+    color: white;
+    font-weight: var(--font-weight-semibold);
+}
+
+.button-primary:not(:disabled):hover{
+    box-shadow: var(--button-shadow);
+    color: white;
+}
+
+.button-primary:not(:disabled):active{
+    background: var(--gradient-pressed-button);
+    color: white;
+}
+
+.button-primary:disabled{
+    background: var(--gradient-disabled-button);
+    color: white;
+}
+
+.button-outline{
+    text-align: center;
+    text-decoration: none;
+    background: none;
+    gap: var(--spacing-1);
+    border-radius: var(--radius-button);
+    border: 1px solid var(--primary-color);
+    padding: var(--spacing-1);
+    color: var(--primary-color);
+    font-weight: var(--font-weight-semibold);
+}
+
+.button-outline:not(:disabled):hover{
+    background: var(--secondary-color);
+    color: white;
+}
+
+.navbar-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-1);
+    text-align: center;
+    text-decoration: none;
+    background: none;
+    border: none;
+    color: white;
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-button);
+    white-space: nowrap;
+}
+
+.navbar-button:not(:disabled):hover{
+    background: var(--navbar-button-color);
+}
+
+.navbar-button.active {
+    background: var(--navbar-button-color);
+    pointer-events: none;
+    cursor: default;
+}
+
+.menu-list {
+    width: 100%;
+}
+
+.menu-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-1);
+    text-decoration: none;
+    padding: var(--spacing-1) var(--spacing-2);
+    width: 100%;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--radius-button);
+}
+
+.menu-button:hover {
+    background: var(--background-color);
+    box-shadow: var(--shadow-color);
+}
+
+.menu-button[data-tone="income"]   
+{ --accent-color: #1f9d39; 
+    --background-color: rgba(171, 247, 136, 0.178); 
+    --shadow-color: 0 2px 10px hsla(118, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="expense"]  
+{ 
+    --accent-color: #f05a28; 
+    --background-color: rgba(247, 136, 136, 0.178);
+    --shadow-color: 0 2px 10px hsla(0, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="balance"]  
+{ 
+    --accent-color: #d89a00; 
+    --background-color: rgba(247, 230, 136, 0.178);
+    --shadow-color: 0 2px 10px hsla(54, 82%, 42%, 0.25);
+}
+.menu-button[data-tone="settings"] 
+{ 
+    --accent-color: #9d49ec; 
+    --background-color: rgba(225, 136, 247, 0.178);
+    --shadow-color: 0 2px 10px hsla(288, 82%, 42%, 0.25);
+}

@@ -1,0 +1,55 @@
+:root{
+    --radius-card: 0.25rem;
+    --radius-button: 0.25rem;
+    --radius-field: 0.25rem;
+
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-5: 1.5rem;
+    --spacing-6: 2rem;
+    --spacing-7: 3rem;
+
+    --hero-overlap: clamp(-14px, -2.5vw, -20px);
+
+    --primary-color: rgb(76, 88, 255);
+    --secondary-color: rgb(154, 143, 255);
+    --field-color: rgb(211, 211, 211);
+    --dropdown-color: rgb(117, 117, 117);
+    --errors-color: rgb(255, 0, 0);
+    --navbar-button-color: rgba(11, 124, 39, 0.582);
+
+    --user-bar-background: rgba(255, 255, 255, 0.15);
+    --user-bar-blur: blur(4px);
+
+    --card-background: hsla(0, 0%, 100%, 0.712); 
+
+    --menu-button-background: rgba(136, 171, 247, 0.178);
+    --button-shadow: 0 2px 10px hsla(241, 82%, 42%, 0.25);
+
+    --gradient-active-button: linear-gradient( 
+    to bottom, 
+        var(--secondary-color) 0%, 
+        rgb(101, 99, 253) 90%, 
+        var(--primary-color) 100%
+    );
+    --gradient-pressed-button: linear-gradient(
+        to top,
+        var(--secondary-color) 0%, 
+        rgb(101, 99, 253) 90%, 
+        var(--primary-color) 100%
+    );
+    --gradient-disabled-button: linear-gradient(
+        to bottom,
+        var(--secondary-color),
+        var(--secondary-color),
+        var(--secondary-color)
+    );
+
+    --gradient-header: 
+    linear-gradient(330deg,var(--secondary-color) 0%, rgb(101, 99, 253) 53%, var(--primary-color) 100%);
+
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+}
