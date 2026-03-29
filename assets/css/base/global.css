@@ -1,0 +1,44 @@
+body{
+    background-image: url(/assets/images/background-image.jpg);
+    font-family: "Poppins", sans-serif;
+}
+
+.main-centered{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100svh;
+    margin: auto;
+}
+
+.user-bar-text{
+    color: white
+}
+
+.user-bar{
+    display: inline-flex;
+
+    background: var(--user-bar-background);
+    color: white;
+
+    padding: var(--spacing-1) var(--spacing-1);
+    border-radius: 0 0 var(--radius-card) 0;
+
+    backdrop-filter: var(--user-bar-blur);
+}
+
+ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.forwarding a{
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.forwarding a:hover{
+    color: var(--secondary-color);
+}
