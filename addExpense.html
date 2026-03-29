@@ -15,18 +15,18 @@
     <header class="py-3">
         <div class="container-fluid header-container d-flex align-items-center justify-content-between">
             <a href="homePage.html" class="logo">
-                <img src="assets/images/piggy-bank-icon.svg" height="25px"/>
-                <h1 class="h6">Budget <br>Manager</h1>   
+                <img src="assets/images/piggy-bank-icon.svg" height="25" alt="">
+                <span class="h6">Budget <br>Manager</span>   
             </a>
             <nav class="site-nav navbar-expand-md">
                 <button class="open-menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                     <img src="assets/images/navbar/menu.svg" alt="Open mobile menu">
                 </button>
-                <div class="offcanvas offcanvas-end offcanvas-md" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas offcanvas-end offcanvas-md" tabindex="-1" id="offcanvasRight">
                     <div class="offcanvas-header">
                         <div class="logo">
-                            <img src="assets/images/piggy-bank-icon.svg" height="25px"/>
-                            <p class="h6">Budget <br>Manager</p>   
+                            <img src="assets/images/piggy-bank-icon.svg" height="25" alt="">
+                            <span class="h6">Budget <br>Manager</span>   
                         </div> 
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
@@ -34,31 +34,31 @@
                         <ul class="nav-menu">
                             <li class="nav-item">
                                 <a class="navbar-button" href="#">
-                                    <img src="assets/images/navbar/dollar-sign.svg" height="16px"/>
+                                    <img src="assets/images/navbar/dollar-sign.svg" height="16" alt="">
                                     <span>Add Income</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button active" href="#">
-                                    <img src="assets/images/navbar/shopping-cart.svg" height="16px"/>
+                                    <img src="assets/images/navbar/shopping-cart.svg" height="16" alt="">
                                     <span>Add Expense</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="viewBalance.html">
-                                    <img src="assets/images/navbar/pie-chart.svg" height="16px"/>
+                                    <img src="assets/images/navbar/pie-chart.svg" height="16" alt="">
                                     <span>View Balance</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="#">
-                                    <img src="assets/images/navbar/settings.svg" height="16px"/>
+                                    <img src="assets/images/navbar/settings.svg" height="16" alt="">
                                     <span>Settings</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-button" href="index.html">
-                                    <img src="assets/images/navbar/log-out.svg" height="16px"/>
+                                    <img src="assets/images/navbar/log-out.svg" height="16" alt="">
                                     <span>Log out</span>
                                 </a>
                             </li>
@@ -77,53 +77,51 @@
         </div>
     </div>
     <main class="container">
-        <div class="add-expense-section" >
-    <main class="container main-centered">
-        <section class="add-expense-section" >
-            <h2 id="formTitle" class="form-header h4">Adding new expense</h2> 
-            <div class="form-card"> 
-                <div class="description">
-                    <p>Enter data for new expense</p>
-                </div>
-                <form aria-labelledby="formTitle" novalidate>
+        <section class="container main-centered">
+            <div class="add-expense-section" >
+                <h2 id="formTitle" class="form-header h4">Adding new expense</h2> 
+                <form class="form-card"> 
+                    <div class="description">
+                        <p>Enter data for new expense</p>
+                    </div>
                     <div class="fields">
                         <div class="container field-control">
                             <div class="row input-wrapper">
                                 <span class="col-2 input-symbol">
-                                    <img src="assets/images/forms/dollar-sign.svg" alt="" aria-hidden="true"/>
+                                    <img src="assets/images/forms/dollar-sign.svg" alt="">
                                 </span>
                                 <label for="amount" class="visually-hidden">Amount</label>
-                                <input id="amount" name="amount" class="col field" type="number" placeholder="Amount" autocomplete="amount" inputmode="decimal" required>
-                                <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                                <input id="amount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
+                                <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>
                         <div class="container field-control">
                             <div class="row input-wrapper">
                                 <span class="col-2 input-symbol">
-                                    <img src="assets/images/forms/calendar.svg" alt="" aria-hidden="true"/>
+                                    <img src="assets/images/forms/calendar.svg" alt="">
                                 </span>
                                 <label for="expenseDate" class="visually-hidden">Date</label>
-                                <input id="expenseDate" name="date" class="col field" type="date" value="2026-03-12" required>
+                                <input id="expenseDate" name="date" class="col field" type="date" required>
                             </div>
                         </div>
                         <div class="container field-control">
                             <div class="row input-wrapper">
                                 <span class="col-2 input-symbol">
-                                    <img src="assets/images/forms/credit-card.svg" alt="" aria-hidden="true"/>
+                                    <img src="assets/images/forms/credit-card.svg" alt="">
                                 </span>
                                 <label for="paymentMethod" class="visually-hidden">Payment method</label>
                                 <select id="paymentMethod" name="paymentMethod" class="col field select-field" required>
-                                        <option value="" selected disabled hidden>Payment method</option>
-                                        <option class="dropdown-item">Cash</option>
-                                        <option class="dropdown-item">Credit card</option>
-                                        <option class="dropdown-item">Debit card</option>
-                                </select>
+                                    <option value="" selected disabled hidden>Payment method</option>
+                                    <option class="dropdown-item">Cash</option>
+                                    <option class="dropdown-item">Credit card</option>
+                                    <option class="dropdown-item">Debit card</option>
+                                 </select>
                             </div>
                         </div>
                         <div class="container field-control">
                             <div class="row input-wrapper">
                                 <span class="col-2 input-symbol">
-                                    <img src="assets/images/forms/layers.svg" alt="" aria-hidden="true"/>
+                                    <img src="assets/images/forms/layers.svg" alt="">
                                 </span>
                                 <label for="category" class="visually-hidden">Category</label>
                                 <select id="category" name="category" class="col field select-field" required>
@@ -151,11 +149,11 @@
                         <div class="container field-control">
                             <div class="row input-wrapper">
                                 <span class="col-2 input-symbol">
-                                    <img src="assets/images/forms/message-square.svg" alt="" aria-hidden="true"/>
+                                    <img src="assets/images/forms/message-square.svg" alt="">
                                 </span>
                                 <label for="comment" class="visually-hidden">Comment</label>
-                                <input id="comment" name="comment" class="col field" type="text" placeholder="Comment" autocomplete="amount" required>
-                                <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="" aria-hidden="true"/>
+                                <input id="comment" name="comment" class="col field" type="text" placeholder="Comment" required>
+                                <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>
                         <button class="button-primary submit addExpense" type="submit">Add expense</button>
@@ -165,11 +163,11 @@
             </div>
         </section> 
     </main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="assets/js/validation.js" charset="UTF-8"></script>
-<script src="assets/js/modals.js" charset="UTF-8"></script>
-<script src="assets/js/balance.js" charset="UTF-8"></script>
-<script src="assets/js/main.js" charset="UTF-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="assets/js/validation.js"></script>
+    <script src="assets/js/modals.js"></script>
+    <script src="assets/js/balance.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
