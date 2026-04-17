@@ -85,7 +85,7 @@ function toggleConfirmPasswordErrors(fieldElement) {
     const passwordValue = $("#password").val().trim();
     const confirmPasswordValue = $("#confirmPassword").val().trim();
 
-    const noValidateMessage = $(confirmPasswordValue).closest(".field-control").find(".validation-message").length === 0;
+    const noValidateMessage = $("#confirmPassword").closest(".field-control").find(".validation-message").length === 0;
     const message = $(fieldElement).closest(".field-control").find(".validation-message").text();
 
     if (message === "Passwords do not match") {
