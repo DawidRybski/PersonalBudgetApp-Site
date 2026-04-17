@@ -100,9 +100,9 @@ function toggleConfirmPasswordErrors(fieldElement) {
 function submitFormValidation(){
     $(".submit").on("click", function(){    
         $(".field").each(function (){
-            var fieldLabel = getFieldLabel(this);
-            var hasBlankValidate = $(this).closest(".field-control").find(".validation-message").length;
-            var value = ($(this).val() || "").trim();
+            let fieldLabel = getFieldLabel(this);
+            let hasBlankValidate = $(this).closest(".field-control").find(".validation-message").length;
+            let value = ($(this).val() || "").trim();
 
             if (value === "") {
                 if (!hasBlankValidate){
@@ -126,7 +126,7 @@ function clearErrorsAndUpdateButton(){
 
 function toggleValidationErrors(){
     $(".field").on("input", function(){
-    var idOfElement = $(this).attr("id");
+    let idOfElement = $(this).attr("id");
         if ((idOfElement === "email")){
             toggleEmailErrors(this);
         }
@@ -142,11 +142,11 @@ function loginRedirect(){
     $("#loginForm").on("submit", function(e){
     e.preventDefault();
 
-    var validCredentials = true;
-    var blankField = false;
+    let validCredentials = true;
+    let blankField = false;
     
     $(".field").each(function (){
-        var value = $(this).val().trim();
+        let value = $(this).val().trim();
 
         if (value === "") {
             blankField = true;
