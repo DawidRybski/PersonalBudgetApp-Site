@@ -12,7 +12,10 @@ function createExpensesChart() {
         amounts.push(categoryAmount);
     });
 
-    new Chart('expensesChart', {
+    const canvas = document.getElementById('expensesChart');
+    if (!canvas) return;
+
+    new Chart(canvas, {
         type: 'pie',
         data: {
             labels: categories,
