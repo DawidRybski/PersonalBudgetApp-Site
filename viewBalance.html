@@ -82,11 +82,11 @@
                     <img src="assets/images/forms/calendar.svg" alt="Select dates period">
                 </button>
             </h1>
-            <div class="modal fade" id="calendarModal" tabindex="-1" aria-hidden="true"> 
+            <div class="modal fade" id="calendarModal" tabindex="-1"  role="dialog" aria-labelledby="calendarModalLabel" aria-hidden="true"> 
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header form-header">
-                            <h2 class="h4">Select a dates range</h2>
+                            <h2 id="calendarModalLabel" class="h4">Select a dates range</h2>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -361,11 +361,11 @@
                 </div>
             </section>
         </section>
-        <div class="modal fade" id="editIncomeModal" tabindex="-1" aria-hidden="true"> 
+        <div class="modal fade" id="editIncomeModal" tabindex="-1"  role="dialog" aria-labelledby="editIncomeModalLabel" aria-hidden="true"> 
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header form-header">
-                        <h2 class="h4">Edit record</h2>
+                        <h2 id="editIncomeModalLabel" class="h4">Edit record</h2>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="container d-flex flex-column justify-content-start p-3">
@@ -408,11 +408,11 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="editExpenseModal" tabindex="-1" aria-hidden="true"> 
+        <div class="modal fade" id="editExpenseModal" tabindex="-1"  role="dialog" aria-labelledby="editExpenseModalLabel" aria-hidden="true"> 
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header form-header">
-                        <h2 class="h4">Edit record</h2>
+                        <h2 id="editExpenseModalLabel" class="h4">Edit record</h2>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="container d-flex flex-column justify-content-start p-3">
@@ -480,11 +480,11 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="removeModal" tabindex="-1" aria-hidden="true"> 
+        <div class="modal fade" id="removeModal" tabindex="-1"  role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true"> 
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header form-header">
-                            <h2 class="h4">Remove transaction</h2>
+                            <h2 id="removeModalLabel" class="h4">Remove transaction</h2>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="container d-flex flex-column justify-content-start p-3">
