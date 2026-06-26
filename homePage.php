@@ -39,13 +39,13 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-button" href="addExpense.html">
+                                <a class="navbar-button" href="addExpense.php">
                                     <img src="assets/images/navbar/shopping-cart.svg" height="16" alt="">
                                     <span>Add Expense</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-button" href="viewBalance.html">
+                                <a class="navbar-button" href="viewBalance.php">
                                     <img src="assets/images/navbar/pie-chart.svg" height="16" alt="">
                                     <span>View Balance</span>
                                 </a>
@@ -57,7 +57,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-button" href="index.html">
+                                <a class="navbar-button" href="index.php">
                                     <img src="assets/images/navbar/log-out.svg" height="16" alt="">
                                     <span>Log out</span>
                                 </a>
@@ -87,11 +87,11 @@
                         <img src="assets/images/menu/dollar-sign.svg" height="40" alt="">
                         <span>Add Income</span>
                     </a>
-                    <a class="menu-button p-3" data-tone="expense" href="addExpense.html">
+                    <a class="menu-button p-3" data-tone="expense" href="addExpense.php">
                         <img src="assets/images/menu/shopping-cart.svg" height="40" alt="">
                         <span>Add Expense</span>
                     </a>
-                    <a class="menu-button p-3" data-tone="balance" href="viewBalance.html">
+                    <a class="menu-button p-3" data-tone="balance" href="viewBalance.php">
                         <img src="assets/images/menu/pie-chart.svg" height="40" alt="">
                         <span>View Balance</span>
                     </a>
@@ -100,7 +100,7 @@
                         <span>Settings</span>
                     </a>
                 </div>
-                <a class="button-outline p-2" data-tone="logout" href="index.html">
+                <a class="button-outline p-2" data-tone="logout" href="index.php">
                         <img src="assets/images/menu/log-out.svg" height="16" alt="">
                         <span>Log out</span>
                 </a>

@@ -154,7 +154,7 @@ function loginRedirect(){
     });
 
     if (validCredentials && !blankField){
-        window.location.href = "homePage.html";
+        window.location.href = "homePage.php";
     }
 });
 }

@@ -14,12 +14,12 @@
 <body>
     <header class="p-3 mb-3"> 
         <div class="container d-flex align-items-center justify-content-between"> 
-            <a href="index.html" class="logo">
+            <a href="index.php" class="logo">
                 <img src="assets/images/piggy-bank-icon.svg" height="25" alt="">
                 <span class="h6">Budget <br>Manager</span>   
             </a>
             <div class="d-flex gap-2">
-                <a class="button-primary px-3" href="logIn.html">Log in</a> 
+                <a class="button-primary px-3" href="logIn.php">Log in</a> 
             </div>
         </div> 
     </header>
@@ -74,7 +74,7 @@
                         </div>
                         <button class="button-primary submit" type="submit">Sign up</button>
                         <p class="forwarding">Already have an account? 
-                            <a href="logIn.html">Log in</a>
+                            <a href="logIn.php">Log in</a>
                         </p>
                     </div>
                 </form>

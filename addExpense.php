@@ -45,7 +45,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-button" href="viewBalance.html">
+                                <a class="navbar-button" href="viewBalance.php">
                                     <img src="assets/images/navbar/pie-chart.svg" height="16" alt="">
                                     <span>View Balance</span>
                                 </a>
@@ -57,7 +57,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-button" href="index.html">
+                                <a class="navbar-button" href="index.php">
                                     <img src="assets/images/navbar/log-out.svg" height="16" alt="">
                                     <span>Log out</span>
                                 </a>
@@ -157,7 +157,7 @@
                             </div>
                         </div>
                         <button class="button-primary submit addExpense" type="submit">Add expense</button>
-                        <a class="button-outline" href="homePage.html">Cancel</a>
+                        <a class="button-outline" href="homePage.php">Cancel</a>
                     </div>
                 </form>
             </div>

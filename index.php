@@ -16,8 +16,8 @@
             </div> 
 
             <div class="d-flex gap-2">
-                <a class="button-primary px-3" href="register.html">Sign up</a>
-                <a class="button-outline px-3" href="logIn.html">Log in</a> 
+                <a class="button-primary px-3" href="register.php">Sign up</a>
+                <a class="button-outline px-3" href="logIn.php">Log in</a> 
             </div>
         </div> 
     </header>
@@ -28,8 +28,8 @@
                 <h1 class="h4">Save wisely and spend consciously</h1>
                 <p>Track your expenses, plan your budget, and see where you spend your money. All in one place. <br/><br/> If you'd like to try it out, <span>sign up for free</span> and start adding your expenses and income. Budget Manager will calculate your balance for the selected period, allowing you to take action to save money.</p>
                 <div class="row">
-                    <a class="col mx-3 button-primary" href="register.html" >Sign up</a>
-                    <a class="col mx-3 button-outline" href="logIn.html">Log in</a>
+                    <a class="col mx-3 button-primary" href="register.php" >Sign up</a>
+                    <a class="col mx-3 button-outline" href="logIn.php">Log in</a>
                 </div>
             </div>
         </section>
