@@ -1,3 +1,95 @@
+<?php
+    session_start();
+
+    if (isset($_POST['email']))
+    {
+        $validation_OK = true;
+
+        $name = $_POST['name'];
+     
+        if ((strlen($name)<3) || (strlen($name)>50))
+        {
+            $validation_OK = false;
+            $_SESSION['e_name']="Name must be between 3 and 50 characters long";
+        }
+
+        if (!preg_match('/^[\p{L}\p{N}_-]+$/u', $name))
+        {
+            $validation_OK = false;
+			$_SESSION['e_name']="The name cannot contain special characters other than _ and -";
+        }
+
+        $email=$_POST['email'];
+		$emailB=filter_var($email, FILTER_SANITIZE_EMAIL);
+
+        if ((filter_var($emailB, FILTER_VALIDATE_EMAIL) == false) || ($emailB!=$email))
+		{
+			$validation_OK=false;
+			$_SESSION['e_email']="Looks like this is not an email!";
+		}
+
+        $password = $_POST['password'];
+		$confirmPassword = $_POST['confirmPassword'];
+		
+		if((strlen($password)<6) || (strlen($password)>64))
+		{
+			$validation_OK=false;
+			$_SESSION['password']="Password must be between 6 and 64 characters long";
+		}
+		
+		if($password!=$confirmPassword)
+		{
+			$validation_OK=false;
+			$_SESSION['password']="Passwords do not match";
+		}
+
+        if (empty($_POST['email']) || empty($_POST['name']) || empty($_POST['password']) || empty($_POST['confirmPassword']))
+        {
+            $validation_OK = false;
+        }
+
+        $password_hash=password_hash($password,PASSWORD_DEFAULT);
+
+        $_SESSION['fr_email'] = $email;
+		$_SESSION['fr_name'] = $name;
+		$_SESSION['fr_password'] = $password;
+		$_SESSION['fr_confirmPassword'] = $confirmPassword;
+
+        require_once 'config/database.php';
+
+        try {
+            // Does email exist?
+            $query = $db->prepare('SELECT id FROM users WHERE email = :email');
+            $query->execute([':email' => $email]);
+
+            if ($query->fetch())
+            {
+                $validation_OK = false;
+                $_SESSION['e_email'] = 'There is already an account with this email address!';
+            }
+
+             if ($validation_OK == true) 
+            {
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+                $query = $db->prepare('INSERT INTO users (username, email, password) VALUES (:name, :email, :password)');
+
+                $query->execute([
+                    ':name' => $name,
+                    ':email' => $email,
+                    ':password' => $password_hash
+                ]);
+
+                $_SESSION['successful_registration'] = true;
+                header('Location: logIn.php');
+                exit;
+            }
+
+        } catch (PDOException $error) {
+            echo '<span style="color:red;">Błąd serwera! Spróbuj ponownie później.</span>';
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +122,7 @@
                 <div class="description">
                     <p>Enter your details to create an account</p>
                 </div>
-                <form aria-labelledby="formTitle" novalidate>
+                <form method="post" aria-labelledby="formTitle" novalidate>
                     <div class="fields">
                         <div class="container field-control">
                             <div class="row input-wrapper">
