@@ -10,13 +10,13 @@
         if ((strlen($name)<3) || (strlen($name)>50))
         {
             $validation_OK = false;
-            $_SESSION['e_name']="Name must be between 3 and 50 characters long";
+            $_SESSION['error_name']="Name must be between 3 and 50 characters long";
         }
 
         if (!preg_match('/^[\p{L}\p{N}_-]+$/u', $name))
         {
             $validation_OK = false;
-			$_SESSION['e_name']="The name cannot contain special characters other than _ and -";
+			$_SESSION['error_name']="The name cannot contain special characters other than _ and -";
         }
 
         $email=$_POST['email'];
@@ -25,7 +25,7 @@
         if ((filter_var($emailB, FILTER_VALIDATE_EMAIL) == false) || ($emailB!=$email))
 		{
 			$validation_OK=false;
-			$_SESSION['e_email']="Looks like this is not an email!";
+			$_SESSION['error_email']="Looks like this is not an email!";
 		}
 
         $password = $_POST['password'];
@@ -34,13 +34,13 @@
 		if((strlen($password)<6) || (strlen($password)>64))
 		{
 			$validation_OK=false;
-			$_SESSION['password']="Password must be between 6 and 64 characters long";
+			$_SESSION['e_password']="Password must be between 6 and 64 characters long";
 		}
 		
 		if($password!=$confirmPassword)
 		{
 			$validation_OK=false;
-			$_SESSION['password']="Passwords do not match";
+			$_SESSION['e_confirmPassword']="Passwords do not match";
 		}
 
         if (empty($_POST['email']) || empty($_POST['name']) || empty($_POST['password']) || empty($_POST['confirmPassword']))
@@ -52,12 +52,9 @@
 
         $_SESSION['fr_email'] = $email;
 		$_SESSION['fr_name'] = $name;
-		$_SESSION['fr_password'] = $password;
-		$_SESSION['fr_confirmPassword'] = $confirmPassword;
-
-        require_once 'config/database.php';
 
         try {
+            require_once __DIR__.'/config/database.php';
             // Does email exist?
             $query = $db->prepare('SELECT id FROM users WHERE email = :email');
             $query->execute([':email' => $email]);
@@ -65,10 +62,13 @@
             if ($query->fetch())
             {
                 $validation_OK = false;
-                $_SESSION['e_email'] = 'There is already an account with this email address!';
+                $_SESSION['toast_error'] = 'There is already an account with this email address!';
+
+                header('Location: register.php');
+                exit;
             }
 
-             if ($validation_OK == true) 
+            if ($validation_OK == true) 
             {
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
                 $query = $db->prepare('INSERT INTO users (username, email, password) VALUES (:name, :email, :password)');
@@ -85,7 +85,11 @@
             }
 
         } catch (PDOException $error) {
-            echo '<span style="color:red;">Błąd serwera! Spróbuj ponownie później.</span>';
+            error_log($error->getMessage());
+
+            $_SESSION['toast_error'] = 'Server error. Please try again later.';
+            header('Location: register.php');
+            exit;
         }
     }
 ?>
@@ -115,7 +119,29 @@
             </div>
         </div> 
     </header>
-    <main class="container main-centered">
+    <main class="container main-centered position-relative">
+        <?php if (isset($_SESSION['toast_error'])): ?>
+                <div class="toast-container position-absolute top-0 end-0 p-3">
+                    <div id="emailToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <?= isset($_SESSION['toast_error']) ? htmlspecialchars($_SESSION['toast_error']) : '' ?>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toastElement = document.getElementById('emailToast');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                });
+            </script>
+        <?php
+            unset($_SESSION['toast_error']);
+            endif;
+        ?>
         <section class="form-section">
             <h2 id="formTitle" class="form-header h4">Register Form</h2> 
             <div class="form-card"> 
@@ -130,7 +156,13 @@
                                     <img src="assets/images/forms/mail-icon.svg" alt="" aria-hidden="true">
                                 </span>
                                 <label for="email" class="visually-hidden">Email Address</label>
-                                <input id="email" name="email" class="col field" type="email" placeholder="Email Address" required>
+                                <input id="email" value="<?php 
+                                        if(isset($_SESSION['fr_email']))
+                                        {
+                                            echo $_SESSION['fr_email'];
+                                            unset($_SESSION['fr_email']);
+                                        }
+                                    ?>" name="email" class="col field" type="email" placeholder="Email Address" required>
                                 <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>
@@ -140,7 +172,13 @@
                                     <img src="assets/images/forms/person-icon.svg" alt="" aria-hidden="true">
                                 </span>
                                 <label for="name" class="visually-hidden">Name</label>
-                                <input id="name" name="name" class="col field" type="text" placeholder="Name" required>
+                                <input id="name" value="<?php 
+                                        if(isset($_SESSION['fr_name']))
+                                        {
+                                            echo $_SESSION['fr_name'];
+                                            unset($_SESSION['fr_name']);
+                                        }
+                                    ?>" name="name" class="col field" type="text" placeholder="Name" required>
                                 <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>
@@ -173,10 +211,11 @@
             </div>
         </section> 
     </main>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
-<script src="assets/js/validation.js"></script>
-<script src="assets/js/modals.js"></script>
-<script src="assets/js/balance.js"></script>
-<script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script src="assets/js/validation.js"></script>
+    <script src="assets/js/modals.js"></script>
+    <script src="assets/js/balance.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
