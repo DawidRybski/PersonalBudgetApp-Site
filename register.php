@@ -79,8 +79,9 @@
                     ':password' => $password_hash
                 ]);
 
+                $_SESSION['registration_toast'] = 'User successfully registered!';
                 $_SESSION['successful_registration'] = true;
-                header('Location: logIn.php');
+                header('Location: register.php');
                 exit;
             }
 
@@ -121,16 +122,16 @@
     </header>
     <main class="container main-centered position-relative">
         <?php if (isset($_SESSION['toast_error'])): ?>
-                <div class="toast-container position-absolute top-0 end-0 p-3">
-                    <div id="emailToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                <?= isset($_SESSION['toast_error']) ? htmlspecialchars($_SESSION['toast_error']) : '' ?>
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <div class="toast-container position-absolute top-0 end-0 p-3">
+                <div id="emailToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <?= isset($_SESSION['toast_error']) ? htmlspecialchars($_SESSION['toast_error']) : '' ?>
                         </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                 </div>
+            </div>
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
                     const toastElement = document.getElementById('emailToast');
@@ -142,6 +143,29 @@
             unset($_SESSION['toast_error']);
             endif;
         ?>
+
+        <?php if (isset($_SESSION['registration_toast'])): ?>
+            <div class="toast-container position-absolute top-0 end-0 p-3">
+                <div id="registrationToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <?= isset($_SESSION['registration_toast']) ? htmlspecialchars($_SESSION['registration_toast']) : '' ?>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toastElement = document.getElementById('registrationToast');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                });
+            </script>
+            <?php
+                unset($_SESSION['registration_toast']);
+                endif;
+            ?>
         <section class="form-section">
             <h2 id="formTitle" class="form-header h4">Register Form</h2> 
             <div class="form-card"> 
