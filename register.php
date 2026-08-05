@@ -62,7 +62,7 @@
             if ($query->fetch())
             {
                 $validation_OK = false;
-                $_SESSION['toast_error'] = 'There is already an account with this email address!';
+                $_SESSION['registration_error_toast'] = 'There is already an account with this email address!';
 
                 header('Location: register.php');
                 exit;
@@ -88,7 +88,7 @@
         } catch (PDOException $error) {
             error_log($error->getMessage());
 
-            $_SESSION['toast_error'] = 'Server error. Please try again later.';
+            $_SESSION['registration_error_toast'] = 'Server error. Please try again later.';
             header('Location: register.php');
             exit;
         }
@@ -121,12 +121,12 @@
         </div> 
     </header>
     <main class="container main-centered position-relative">
-        <?php if (isset($_SESSION['toast_error'])): ?>
+        <?php if (isset($_SESSION['registration_error_toast'])): ?>
             <div class="toast-container position-absolute top-0 end-0 p-3">
                 <div id="emailToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="d-flex">
                         <div class="toast-body">
-                            <?= isset($_SESSION['toast_error']) ? htmlspecialchars($_SESSION['toast_error']) : '' ?>
+                            <?= isset($_SESSION['registration_error_toast']) ? htmlspecialchars($_SESSION['registration_error_toast']) : '' ?>
                         </div>
                         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -140,7 +140,7 @@
                 });
             </script>
         <?php
-            unset($_SESSION['toast_error']);
+            unset($_SESSION['registration_error_toast']);
             endif;
         ?>
 

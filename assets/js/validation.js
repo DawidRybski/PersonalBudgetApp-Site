@@ -188,9 +188,7 @@ function toggleValidationErrors(){
 
 function loginRedirect(){
     $("#loginForm").on("submit", function(e){
-    e.preventDefault();
 
-    let validCredentials = true;
     let blankField = false;
     
     $(".field").each(function (){
@@ -201,8 +199,8 @@ function loginRedirect(){
         }
     });
 
-    if (validCredentials && !blankField){
-        window.location.href = "homePage.php";
+    if (blankField) {
+        e.preventDefault();
     }
 });
 }

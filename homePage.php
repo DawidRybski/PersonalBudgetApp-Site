@@ -1,3 +1,12 @@
+<?php
+    session_start();
+
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: logIn.php');
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +66,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-button" href="index.php">
+                                <a class="navbar-button" href="logOut.php">
                                     <img src="assets/images/navbar/log-out.svg" height="16" alt="">
                                     <span>Log out</span>
                                 </a>
@@ -72,7 +81,7 @@
         <div class="container-fluid header-container">
             <div class="user-bar-text mt-1">
                 <img src="assets/images/forms/person-icon.svg" alt="User icon">
-                <span>User: <strong>Dawid</strong></span>
+                <span>User: <strong> <?= htmlspecialchars($_SESSION['name']) ?></strong></span>
             </div>
         </div>
     </div>
@@ -100,7 +109,7 @@
                         <span>Settings</span>
                     </a>
                 </div>
-                <a class="button-outline p-2" data-tone="logout" href="index.php">
+                <a class="button-outline p-2" data-tone="logout" href="logOut.php">
                         <img src="assets/images/menu/log-out.svg" height="16" alt="">
                         <span>Log out</span>
                 </a>
