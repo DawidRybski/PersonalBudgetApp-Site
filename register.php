@@ -80,11 +80,31 @@
                 ]);
 
                 $userId = $db->lastInsertId();
+
+                //przychody
                 $query = $db->prepare(
                     'INSERT INTO incomes_category_assigned_to_users (user_id, name)
                         SELECT :user_id, name FROM incomes_category_default'
                 );
 
+                $query->execute([
+                    ':user_id' => $userId
+                ]);
+
+                //wydatki
+                $query = $db->prepare(
+                    'INSERT INTO expenses_category_assigned_to_users (user_id, name)
+                        SELECT :user_id, name FROM expenses_category_default'
+                );
+                $query->execute([
+                    ':user_id' => $userId
+                ]);
+
+                //metody płatności
+                $query = $db->prepare(
+                    'INSERT INTO payment_methods_assigned_to_users (user_id, name)
+                        SELECT :user_id, name FROM payment_methods_default'
+                );
                 $query->execute([
                     ':user_id' => $userId
                 ]);
