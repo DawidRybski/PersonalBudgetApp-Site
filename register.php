@@ -79,6 +79,16 @@
                     ':password' => $password_hash
                 ]);
 
+                $userId = $db->lastInsertId();
+                $query = $db->prepare(
+                    'INSERT INTO incomes_category_assigned_to_users (user_id, name)
+                        SELECT :user_id, name FROM incomes_category_default'
+                );
+
+                $query->execute([
+                    ':user_id' => $userId
+                ]);
+
                 $_SESSION['registration_toast'] = 'User successfully registered!';
                 $_SESSION['successful_registration'] = true;
                 header('Location: register.php');
