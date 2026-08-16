@@ -18,6 +18,19 @@
 
     $categories = $query->fetchAll();
 
+    $query = $db->prepare(
+        'SELECT id, name
+        FROM payment_methods_assigned_to_users
+        WHERE user_id = :user_id
+        ORDER BY id'
+    );
+
+     $query->execute([
+        ':user_id' => $userId
+    ]);
+
+    $paymentMethods = $query->fetchAll();
+
 ?>
 
 <!DOCTYPE html>
@@ -94,7 +107,7 @@
         <div class="container-fluid header-container">
             <div class="user-bar-text mt-1">
                 <img src="assets/images/forms/person-icon.svg" alt="User icon">
-                <span>User: <strong>Dawid</strong></span>
+                <span>User: <strong><?= htmlspecialchars($_SESSION['name']) ?></strong></span>
             </div>
         </div>
     </div>
@@ -134,9 +147,11 @@
                                 <label for="paymentMethod" class="visually-hidden">Payment method</label>
                                 <select id="paymentMethod" name="paymentMethod" class="col field select-field" required>
                                     <option value="" selected disabled hidden>Payment method</option>
-                                    <option value="cash" class="dropdown-item">Cash</option>
-                                    <option value="credit-card" class="dropdown-item">Credit card</option>
-                                    <option value="debit-card" class="dropdown-item">Debit card</option>
+                                    <?php foreach ($paymentMethods as $paymentMethod): ?>
+                                        <option value="<?= $paymentMethod['id'] ?>" class="dropdown-item">
+                                            <?= htmlspecialchars($paymentMethod['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                  </select>
                             </div>
                         </div>
