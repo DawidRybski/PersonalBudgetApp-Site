@@ -1,36 +1,79 @@
 <?php
     session_start();
 
-    require_once __DIR__ . '/config/database.php';
+    try {
+		require_once __DIR__.'/config/database.php';
 
-    $userId = $_SESSION['user_id'];
+        $userId = $_SESSION['user_id'];
 
-    $query = $db->prepare(
-        'SELECT id, name
-        FROM expenses_category_assigned_to_users
-        WHERE user_id = :user_id
-        ORDER BY id'
-    );
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM expenses_category_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
 
-    $query->execute([
-        ':user_id' => $userId
-    ]);
+        $query->execute([
+            ':user_id' => $userId
+        ]);
 
-    $categories = $query->fetchAll();
+        $categories = $query->fetchAll();
 
-    $query = $db->prepare(
-        'SELECT id, name
-        FROM payment_methods_assigned_to_users
-        WHERE user_id = :user_id
-        ORDER BY id'
-    );
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM payment_methods_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
 
-     $query->execute([
-        ':user_id' => $userId
-    ]);
+        $query->execute([
+            ':user_id' => $userId
+        ]);
 
-    $paymentMethods = $query->fetchAll();
+        $paymentMethods = $query->fetchAll();
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $amount = $_POST['amount'];
+            $date = $_POST['date'];
+            $paymentMethodId = $_POST['paymentMethod'];
+            $categoryId = $_POST['category'];
+            $comment = $_POST['comment'];
+
+            $query = $db->prepare(
+            'INSERT INTO expenses (
+                user_id,
+                expense_category_assigned_to_user_id,
+                payment_method_assigned_to_user_id,
+                amount,
+                date_of_expense,
+                expense_comment
+            )
+            VALUES (
+                :user_id,
+                :category_id,
+                :payment_method_id,
+                :amount,
+                :date,
+                :comment
+            )'
+        );
+
+            $query->execute([
+                ':user_id' => $userId,
+                ':category_id' => $categoryId,
+                ':payment_method_id' => $paymentMethodId,
+                ':amount' => $amount,
+                ':date' => $date,
+                ':comment' => $comment
+            ]);
+        }
+    } catch (PDOException $error)
+    {
+		error_log($error->getMessage());
+
+        $_SESSION['server_error'] = 'Server error. Please try again later.';
+        exit;
+	}
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +158,7 @@
         <section class="container main-centered">
             <div class="add-expense-section" >
                 <h2 id="formTitle" class="form-header h4">Adding new expense</h2> 
-                <form class="form-card"> 
+                <form class="form-card" method="post"> 
                     <div class="description">
                         <p>Enter data for new expense</p>
                     </div>
