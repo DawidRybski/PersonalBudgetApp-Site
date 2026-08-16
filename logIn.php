@@ -1,3 +1,13 @@
+<?php
+	session_start();
+
+	if (isset($_SESSION['user_id']))
+	{
+		header('Location: homePage.php');
+		exit();
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,14 +34,36 @@
             </div>
         </div> 
     </header>
-    <main class="container main-centered">
+    <main class="container main-centered position-relative">
+        <?php if (isset($_SESSION['login_error'])): ?>
+            <div class="toast-container position-absolute top-0 end-0 p-3">
+                <div id="loginToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <?= isset($_SESSION['login_error']) ? htmlspecialchars($_SESSION['login_error']) : '' ?>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toastElement = document.getElementById('loginToast');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                });
+            </script>
+        <?php
+            unset($_SESSION['login_error']);
+            endif;
+        ?>
         <section class="login-section" >
             <h2 id="formTitle" class="form-header h4">Login Form</h2> 
             <div class="form-card"> 
                 <div class="description">
                     <p>Enter your credentials to continue</p>
                 </div>
-                <form id="loginForm" aria-labelledby="formTitle" novalidate>
+                <form id="loginForm" action="loginConfig.php" method="post" aria-labelledby="formTitle" novalidate>
                     <div class="fields">
                         <div class="container field-control">
                             <div class="row input-wrapper">
@@ -66,6 +98,7 @@
             </div>
         </section> 
     </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
 <script src="assets/js/validation.js"></script>
 <script src="assets/js/modals.js"></script>

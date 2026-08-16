@@ -14,7 +14,7 @@
 <body>
     <header class="py-3">
         <div class="container-fluid header-container d-flex align-items-center justify-content-between">
-            <a href="homePage.html" class="logo">
+            <a href="homePage.php" class="logo">
                 <img src="assets/images/piggy-bank-icon.svg" height="25" alt="">
                 <span class="h6">Budget <br>Manager</span>   
             </a>
@@ -57,7 +57,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-button" href="index.php">
+                                <a class="navbar-button" href="logOut.php">
                                     <img src="assets/images/navbar/log-out.svg" height="16" alt="">
                                     <span>Log out</span>
                                 </a>

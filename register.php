@@ -1,3 +1,130 @@
+<?php
+    session_start();
+
+    if (isset($_POST['email']))
+    {
+        $validation_OK = true;
+
+        $name = $_POST['name'];
+     
+        if ((strlen($name)<3) || (strlen($name)>50))
+        {
+            $validation_OK = false;
+            $_SESSION['error_name']="Name must be between 3 and 50 characters long";
+        }
+
+        if (!preg_match('/^[\p{L}\p{N}_-]+$/u', $name))
+        {
+            $validation_OK = false;
+			$_SESSION['error_name']="The name cannot contain special characters other than _ and -";
+        }
+
+        $email=$_POST['email'];
+		$emailB=filter_var($email, FILTER_SANITIZE_EMAIL);
+
+        if ((filter_var($emailB, FILTER_VALIDATE_EMAIL) == false) || ($emailB!=$email))
+		{
+			$validation_OK=false;
+			$_SESSION['error_email']="Looks like this is not an email!";
+		}
+
+        $password = $_POST['password'];
+		$confirmPassword = $_POST['confirmPassword'];
+		
+		if((strlen($password)<6) || (strlen($password)>64))
+		{
+			$validation_OK=false;
+			$_SESSION['e_password']="Password must be between 6 and 64 characters long";
+		}
+		
+		if($password!=$confirmPassword)
+		{
+			$validation_OK=false;
+			$_SESSION['e_confirmPassword']="Passwords do not match";
+		}
+
+        if (empty($_POST['email']) || empty($_POST['name']) || empty($_POST['password']) || empty($_POST['confirmPassword']))
+        {
+            $validation_OK = false;
+        }
+
+        $password_hash=password_hash($password,PASSWORD_DEFAULT);
+
+        $_SESSION['fr_email'] = $email;
+		$_SESSION['fr_name'] = $name;
+
+        try {
+            require_once __DIR__.'/config/database.php';
+            // Does email exist?
+            $query = $db->prepare('SELECT id FROM users WHERE email = :email');
+            $query->execute([':email' => $email]);
+
+            if ($query->fetch())
+            {
+                $validation_OK = false;
+                $_SESSION['registration_error_toast'] = 'There is already an account with this email address!';
+
+                header('Location: register.php');
+                exit;
+            }
+
+            if ($validation_OK == true) 
+            {
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+                $query = $db->prepare('INSERT INTO users (username, email, password) VALUES (:name, :email, :password)');
+
+                $query->execute([
+                    ':name' => $name,
+                    ':email' => $email,
+                    ':password' => $password_hash
+                ]);
+
+                $userId = $db->lastInsertId();
+
+                //przychody
+                $query = $db->prepare(
+                    'INSERT INTO incomes_category_assigned_to_users (user_id, name)
+                        SELECT :user_id, name FROM incomes_category_default'
+                );
+
+                $query->execute([
+                    ':user_id' => $userId
+                ]);
+
+                //wydatki
+                $query = $db->prepare(
+                    'INSERT INTO expenses_category_assigned_to_users (user_id, name)
+                        SELECT :user_id, name FROM expenses_category_default'
+                );
+                $query->execute([
+                    ':user_id' => $userId
+                ]);
+
+                //metody płatności
+                $query = $db->prepare(
+                    'INSERT INTO payment_methods_assigned_to_users (user_id, name)
+                        SELECT :user_id, name FROM payment_methods_default'
+                );
+                $query->execute([
+                    ':user_id' => $userId
+                ]);
+
+                $_SESSION['registration_toast'] = 'User successfully registered!';
+                $_SESSION['successful_registration'] = true;
+                header('Location: register.php');
+                exit;
+            }
+
+        } catch (PDOException $error) {
+            error_log($error->getMessage());
+
+            $_SESSION['registration_error_toast'] = 'Server error. Please try again later.';
+            header('Location: register.php');
+            exit;
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,14 +150,59 @@
             </div>
         </div> 
     </header>
-    <main class="container main-centered">
+    <main class="container main-centered position-relative">
+        <?php if (isset($_SESSION['registration_error_toast'])): ?>
+            <div class="toast-container position-absolute top-0 end-0 p-3">
+                <div id="emailToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <?= isset($_SESSION['registration_error_toast']) ? htmlspecialchars($_SESSION['registration_error_toast']) : '' ?>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toastElement = document.getElementById('emailToast');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                });
+            </script>
+        <?php
+            unset($_SESSION['registration_error_toast']);
+            endif;
+        ?>
+
+        <?php if (isset($_SESSION['registration_toast'])): ?>
+            <div class="toast-container position-absolute top-0 end-0 p-3">
+                <div id="registrationToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <?= isset($_SESSION['registration_toast']) ? htmlspecialchars($_SESSION['registration_toast']) : '' ?>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toastElement = document.getElementById('registrationToast');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                });
+            </script>
+            <?php
+                unset($_SESSION['registration_toast']);
+                endif;
+            ?>
         <section class="form-section">
             <h2 id="formTitle" class="form-header h4">Register Form</h2> 
             <div class="form-card"> 
                 <div class="description">
                     <p>Enter your details to create an account</p>
                 </div>
-                <form aria-labelledby="formTitle" novalidate>
+                <form method="post" aria-labelledby="formTitle" novalidate>
                     <div class="fields">
                         <div class="container field-control">
                             <div class="row input-wrapper">
@@ -38,7 +210,13 @@
                                     <img src="assets/images/forms/mail-icon.svg" alt="" aria-hidden="true">
                                 </span>
                                 <label for="email" class="visually-hidden">Email Address</label>
-                                <input id="email" name="email" class="col field" type="email" placeholder="Email Address" required>
+                                <input id="email" value="<?php 
+                                        if(isset($_SESSION['fr_email']))
+                                        {
+                                            echo $_SESSION['fr_email'];
+                                            unset($_SESSION['fr_email']);
+                                        }
+                                    ?>" name="email" class="col field" type="email" placeholder="Email Address" required>
                                 <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>
@@ -48,7 +226,13 @@
                                     <img src="assets/images/forms/person-icon.svg" alt="" aria-hidden="true">
                                 </span>
                                 <label for="name" class="visually-hidden">Name</label>
-                                <input id="name" name="name" class="col field" type="text" placeholder="Name" required>
+                                <input id="name" value="<?php 
+                                        if(isset($_SESSION['fr_name']))
+                                        {
+                                            echo $_SESSION['fr_name'];
+                                            unset($_SESSION['fr_name']);
+                                        }
+                                    ?>" name="name" class="col field" type="text" placeholder="Name" required>
                                 <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>
@@ -81,10 +265,11 @@
             </div>
         </section> 
     </main>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
-<script src="assets/js/validation.js"></script>
-<script src="assets/js/modals.js"></script>
-<script src="assets/js/balance.js"></script>
-<script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script src="assets/js/validation.js"></script>
+    <script src="assets/js/modals.js"></script>
+    <script src="assets/js/balance.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
