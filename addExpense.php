@@ -1,3 +1,25 @@
+<?php
+    session_start();
+
+    require_once __DIR__ . '/config/database.php';
+
+    $userId = $_SESSION['user_id'];
+
+    $query = $db->prepare(
+        'SELECT id, name
+        FROM expenses_category_assigned_to_users
+        WHERE user_id = :user_id
+        ORDER BY id'
+    );
+
+    $query->execute([
+        ':user_id' => $userId
+    ]);
+
+    $categories = $query->fetchAll();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,23 +148,11 @@
                                 <label for="category" class="visually-hidden">Category</label>
                                 <select id="category" name="category" class="col field select-field" required>
                                     <option value="" selected disabled hidden>Category</option>
-                                    <option value="food">Food</option>
-                                    <option value="apartment">Apartment</option>
-                                    <option value="transport">Transport</option>
-                                    <option value="telecommunication">Telecommunication</option>
-                                    <option value="healthcare">Healthcare</option>
-                                    <option value="clothes">Clothes</option>
-                                    <option value="hygiene">Hygiene</option>
-                                    <option value="children">Children</option>
-                                    <option value="recreation">Recreation</option>
-                                    <option value="trips">Trips</option>
-                                    <option value="learning">Learning</option>
-                                    <option value="books">Books</option>
-                                    <option value="savings">Savings</option>
-                                    <option value="retirement">Retirement</option>
-                                    <option value="debt-repayment">Debt repayment</option>
-                                    <option value="donation">Donation</option>
-                                    <option value="other">Other</option>
+                                    <?php foreach ($categories as $category): ?>
+                                        <option value="<?= $category['id'] ?>" class="dropdown-item">
+                                            <?= htmlspecialchars($category['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
