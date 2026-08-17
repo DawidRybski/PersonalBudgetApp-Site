@@ -169,7 +169,7 @@
                                     <img src="assets/images/forms/dollar-sign.svg" alt="">
                                 </span>
                                 <label for="amount" class="visually-hidden">Amount</label>
-                                <input id="amount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
+                                <input id="amount" name="amount" class="col field" type="text" step="0.01" placeholder="Amount" inputmode="decimal" required>
                                 <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>

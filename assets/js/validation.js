@@ -1,5 +1,7 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const nameRegex = /^[\p{L}\p{N}_-]+$/u;
+const amount = document.querySelector('#amount');
+const expenseForm = document.querySelector('.form-card');
 
 function getCurrentDate() {
     const date = new Date();
@@ -203,4 +205,22 @@ function loginRedirect(){
         e.preventDefault();
     }
 });
+}
+
+function addValidationPatternForAmount (){
+    // Usuwamy wszystko oprócz cyfr i kropki
+    this.value = this.value.replace(/[^0-9.,]/g, '');
+
+    // Dzielimy po kropce
+    const parts = this.value.split(/[.,]/);
+
+    // Zostawiamy maksymalnie 2 cyfry po przecinku
+    if (parts.length > 1) {
+        const separator = this.value.includes(',') ? ',' : '.';
+        this.value = parts[0] + separator + parts[1].slice(0, 2);
+    }
+}
+
+function replaceCommaToDecimalPoint(element){
+     element.value = element.value.replace(',', '.');
 }
