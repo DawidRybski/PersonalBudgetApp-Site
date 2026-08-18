@@ -217,7 +217,9 @@ function addValidationPatternForAmount (){
     // Zostawiamy maksymalnie 2 cyfry po przecinku
     if (parts.length > 1) {
         const separator = this.value.includes(',') ? ',' : '.';
-        this.value = parts[0] + separator + parts[1].slice(0, 2);
+        this.value = parts[0].slice(0, 6) + separator + parts[1].slice(0, 2);
+    } else {
+        this.value = parts[0].slice(0, 6);
     }
 }
 
