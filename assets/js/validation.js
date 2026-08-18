@@ -1,9 +1,10 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const nameRegex = /^[\p{L}\p{N}_-]+$/u;
 const amount = document.querySelector('#amount');
+const comment = document.querySelector('#comment');
 const expenseForm = document.querySelector('.form-card');
 
-function getCurrentDate() {
+function getCurrentDate(){
     const date = new Date();
     const day = String(date.getDate()).padStart(2, "0");
     const month = String((date.getMonth() + 1)).padStart(2, "0");
@@ -12,7 +13,7 @@ function getCurrentDate() {
     return year + "-" + month + "-" + day;
 }
 
-function getFieldLabel(fieldElement) {
+function getFieldLabel(fieldElement){
     const id = $(fieldElement).attr("id");
     const labelText = $('label[for="' + id + '"]').text().trim();
 
@@ -27,7 +28,7 @@ function getFieldLabel(fieldElement) {
     );
 }
 
-function updateButtonState() {
+function updateButtonState(){
     if ($(".validation-message").length) {
         $(".submit").prop("disabled", true);
     } else {
@@ -35,14 +36,14 @@ function updateButtonState() {
     }
 }
 
-function clearErrors(fieldElement) {
+function clearErrors(fieldElement){
     $(fieldElement).removeClass("validate-border");
     $(fieldElement).closest(".field-control").find(".validation-message").remove();
     $(fieldElement).siblings(".error-icon").hide();
     $(fieldElement).removeAttr("aria-describedby");
 }
 
-function addWrongEmailPatternMessage(emailFieldElement) {
+function addWrongEmailPatternMessage(emailFieldElement){
     const errorId = $(emailFieldElement).attr("id") + "-error";
     $(emailFieldElement).attr("aria-describedby", errorId);
     $(emailFieldElement).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">Looks like this is not an email</p>');
@@ -50,7 +51,7 @@ function addWrongEmailPatternMessage(emailFieldElement) {
     $(emailFieldElement).siblings(".error-icon").show();
 }
 
-function addWordLengthNamePatternMessage(nameFieldElement) {
+function addWordLengthNamePatternMessage(nameFieldElement){
     const errorId = $(nameFieldElement).attr("id") + "-error";
     $(nameFieldElement).attr("aria-describedby", errorId);
     $(nameFieldElement).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">Name must be between 3 and 50 characters long</p>');
@@ -58,7 +59,7 @@ function addWordLengthNamePatternMessage(nameFieldElement) {
     $(nameFieldElement).siblings(".error-icon").show();
 }
 
-function addWrongCharsNamePatternMessage(nameFieldElement) {
+function addWrongCharsNamePatternMessage(nameFieldElement){
     const errorId = $(nameFieldElement).attr("id") + "-error";
     $(nameFieldElement).attr("aria-describedby", errorId);
     $(nameFieldElement).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">Name cannot contain special characters other than _ and -</p>');
@@ -66,7 +67,7 @@ function addWrongCharsNamePatternMessage(nameFieldElement) {
     $(nameFieldElement).siblings(".error-icon").show();
 }
 
-function addBlankFieldErrors(fieldElement, fieldLabel) {
+function addBlankFieldErrors(fieldElement, fieldLabel){
     const errorId = $(fieldElement).attr("id") + "-error";
     $(fieldElement).attr("aria-describedby", errorId);
     $(fieldElement).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">' + fieldLabel + ' cannot be empty</p>');
@@ -74,7 +75,7 @@ function addBlankFieldErrors(fieldElement, fieldLabel) {
     $(fieldElement).siblings(".error-icon").show();
 }
 
-function addPasswordLengthMessage(passwordFieldElement) {
+function addPasswordLengthMessage(passwordFieldElement){
     const errorId = $(passwordFieldElement).attr("id") + "-error";
     $(passwordFieldElement).attr("aria-describedby", errorId);
     $(passwordFieldElement).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">Password must be between 6 and 64 characters long</p>');
@@ -82,7 +83,7 @@ function addPasswordLengthMessage(passwordFieldElement) {
     $(passwordFieldElement).siblings(".error-icon").show();
 }
 
-function addConfirmPasswordMessage(confirmPasswordFieldElement) {
+function addConfirmPasswordMessage(confirmPasswordFieldElement){
     const errorId = $(confirmPasswordFieldElement).attr("id") + "-error";
     $(confirmPasswordFieldElement).attr("aria-describedby", errorId);
     $(confirmPasswordFieldElement).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">Passwords do not match</p>');
@@ -90,20 +91,28 @@ function addConfirmPasswordMessage(confirmPasswordFieldElement) {
     $(confirmPasswordFieldElement).siblings(".error-icon").show();
 }
 
-function checkPasswordConfirm(passwordValue, confirmPasswordValue) {
+function addWordLengthCommentPatternMessage(commentFieldElement){
+    const errorId = $(commentFieldElement).attr("id") + "-error";
+    $(commentFieldElement).attr("aria-describedby", errorId);
+    $(commentFieldElement).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">Comment must be between 1 and 1000 characters long</p>');
+    $(commentFieldElement).addClass("validate-border");
+    $(commentFieldElement).siblings(".error-icon").show();
+}
+
+function checkPasswordConfirm(passwordValue, confirmPasswordValue){
     return passwordValue === confirmPasswordValue;
 }
 
-function toggleEmailErrors(fieldElement) {
+function toggleEmailErrors(fieldElement){
     const value = $(fieldElement).val().trim();
     const noValidateMessage = $(fieldElement).closest(".field-control").find(".validation-message").length === 0;
     const message = $(fieldElement).closest(".field-control").find(".validation-message").text();
 
-    if (message === "Looks like this is not an email") {
+    if (message === "Looks like this is not an email"){
         clearErrors($(fieldElement));
     }
 
-    if (value !== "" && !emailRegex.test(value) && noValidateMessage) {
+    if (value !== "" && !emailRegex.test(value) && noValidateMessage){
         addWrongEmailPatternMessage($(fieldElement));
     }
 }
@@ -114,7 +123,7 @@ function toggleNameErrors(fieldElement){
     const message = $(fieldElement).closest(".field-control").find(".validation-message").text();
     
     if (message === "Name must be between 3 and 50 characters long" ||
-    message === "The name cannot contain special characters other than _ and -") {
+    message === "The name cannot contain special characters other than _ and -"){
         clearErrors($(fieldElement));
     }
 
@@ -125,14 +134,14 @@ function toggleNameErrors(fieldElement){
     }
 }
 
-function togglePasswordErrors(fieldElement) {
+function togglePasswordErrors(fieldElement){
     const passwordValue = $("#password").val().trim();
     const confirmPasswordValue = $("#confirmPassword").val().trim();
     const noValidateMessage = $("#confirmPassword").closest(".field-control").find(".validation-message").length === 0;
     const message = $(fieldElement).closest(".field-control").find(".validation-message").text();
 
     if (message === "Passwords do not match" || 
-        message === "Password must be between 6 and 64 characters long") {
+        message === "Password must be between 6 and 64 characters long"){
         clearErrors($(fieldElement));
     }
 
@@ -140,6 +149,20 @@ function togglePasswordErrors(fieldElement) {
         addPasswordLengthMessage($(fieldElement));
     } else if ($(fieldElement).attr("id") === "confirmPassword" && confirmPasswordValue !== "" && !checkPasswordConfirm(passwordValue, confirmPasswordValue) && noValidateMessage) {
         addConfirmPasswordMessage($(fieldElement));
+    }
+}
+
+function toggleCommentError(fieldElement){
+    const value = $(fieldElement).val().trim();
+    const noValidateMessage = $(fieldElement).closest(".field-control").find(".validation-message").length === 0;
+    const message = $(fieldElement).closest(".field-control").find(".validation-message").text();
+
+    if (message === "Comment must be between 1 and 1000 characters long"){
+        clearErrors($(fieldElement));
+    }
+
+    if(value.length<1 || value.length>1000){
+        addWordLengthCommentPatternMessage($(fieldElement));
     }
 }
 
@@ -184,6 +207,10 @@ function toggleValidationErrors(){
         if ((idOfElement === "password" || idOfElement === "confirmPassword")){
             togglePasswordErrors(this);
         }
+
+        if ((idOfElement === "comment")){
+            toggleCommentError(this);
+        }
         updateButtonState();
     });
 }
@@ -208,13 +235,13 @@ function loginRedirect(){
 }
 
 function addValidationPatternForAmount (){
-    // Usuwamy wszystko oprócz cyfr i kropki
+    // Regexp przepuszczający cyfry, kropkę i przecinek
     this.value = this.value.replace(/[^0-9.,]/g, '');
 
-    // Dzielimy po kropce
+    // Dzielenie wartości po przecinku i kropce
     const parts = this.value.split(/[.,]/);
 
-    // Zostawiamy maksymalnie 2 cyfry po przecinku
+    // Łączenie podzielonych wartości i ograniczenie ilości znaków do 6 przed i 2 po przecinku
     if (parts.length > 1) {
         const separator = this.value.includes(',') ? ',' : '.';
         this.value = parts[0].slice(0, 6) + separator + parts[1].slice(0, 2);
@@ -223,6 +250,6 @@ function addValidationPatternForAmount (){
     }
 }
 
-function replaceCommaToDecimalPoint(element){
-     element.value = element.value.replace(',', '.');
+function replaceCommaToDecimalPoint(fieldElement){
+    fieldElement.value = fieldElement.value.replace(',', '.');
 }
