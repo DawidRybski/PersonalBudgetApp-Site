@@ -50,7 +50,7 @@
                 ':comment' => $comment
             ]);
 
-            $_SESSION['added_expense_toast'] = 'Expense added!';
+            $_SESSION['added_income_toast'] = 'Income added!';
 
             header('Location: addIncome.php');
             exit;
@@ -143,12 +143,12 @@
         </div>
     </div>
     <main class="container main-centered position-relative">
-        <?php if (isset($_SESSION['added_expense_toast'])): ?>
+        <?php if (isset($_SESSION['added_income_toast'])): ?>
             <div class="toast-container position-absolute top-0 end-0 p-3">
-                <div id="addedExpenseToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div id="addedIncomeToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="d-flex">
                         <div class="toast-body">
-                            <?= isset($_SESSION['added_expense_toast']) ? htmlspecialchars($_SESSION['added_expense_toast']) : '' ?>
+                            <?= isset($_SESSION['added_income_toast']) ? htmlspecialchars($_SESSION['added_income_toast']) : '' ?>
                         </div>
                         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -156,13 +156,13 @@
             </div>
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
-                    const toastElement = document.getElementById('addedExpenseToast');
+                    const toastElement = document.getElementById('addedIncomeToast');
                     const toast = new bootstrap.Toast(toastElement);
                     toast.show();
                 });
             </script>
             <?php
-                unset($_SESSION['added_expense_toast']);
+                unset($_SESSION['added_income_toast']);
                 endif;
             ?>
         <section class="container main-centered">
