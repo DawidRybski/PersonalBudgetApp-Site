@@ -1,5 +1,8 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const nameRegex = /^[\p{L}\p{N}_-]+$/u;
+const amount = document.querySelector('#amount');
+const comment = document.querySelector('#comment');
+const formCard = document.querySelector('.form-card');
 
 function getCurrentDate() {
     const date = new Date();
@@ -88,6 +91,14 @@ function addConfirmPasswordMessage(confirmPasswordFieldElement) {
     $(confirmPasswordFieldElement).siblings(".error-icon").show();
 }
 
+function addWordLengthCommentPatternMessage(commentFieldElement){
+    const errorId = $(commentFieldElement).attr("id") + "-error";
+    $(commentFieldElement).attr("aria-describedby", errorId);
+    $(commentFieldElement).closest(".field-control").append('<p id="' + errorId + '" class="validation-message" role="alert">Comment must be between 1 and 1000 characters long</p>');
+    $(commentFieldElement).addClass("validate-border");
+    $(commentFieldElement).siblings(".error-icon").show();
+}
+
 function checkPasswordConfirm(passwordValue, confirmPasswordValue) {
     return passwordValue === confirmPasswordValue;
 }
@@ -141,6 +152,20 @@ function togglePasswordErrors(fieldElement) {
     }
 }
 
+function toggleCommentError(fieldElement){
+    const value = $(fieldElement).val().trim();
+    const noValidateMessage = $(fieldElement).closest(".field-control").find(".validation-message").length === 0;
+    const message = $(fieldElement).closest(".field-control").find(".validation-message").text();
+
+    if (message === "Comment must be between 1 and 1000 characters long"){
+        clearErrors($(fieldElement));
+    }
+
+    if(value.length<1 || value.length>1000){
+        addWordLengthCommentPatternMessage($(fieldElement));
+    }
+}
+
 function submitFormValidation(){
     $(".submit").on("click", function(){    
         $(".field").each(function (){
@@ -182,6 +207,10 @@ function toggleValidationErrors(){
         if ((idOfElement === "password" || idOfElement === "confirmPassword")){
             togglePasswordErrors(this);
         }
+
+        if ((idOfElement === "comment")){
+            toggleCommentError(this);
+        }
         updateButtonState();
     });
 }
@@ -203,4 +232,24 @@ function loginRedirect(){
         e.preventDefault();
     }
 });
+}
+
+function addValidationPatternForAmount (){
+    // Regexp przepuszczający cyfry, kropkę i przecinek
+    this.value = this.value.replace(/[^0-9.,]/g, '');
+
+    // Dzielenie wartości po przecinku i kropce
+    const parts = this.value.split(/[.,]/);
+
+    // Łączenie podzielonych wartości i ograniczenie ilości znaków do 6 przed i 2 po przecinku
+    if (parts.length > 1) {
+        const separator = this.value.includes(',') ? ',' : '.';
+        this.value = parts[0].slice(0, 6) + separator + parts[1].slice(0, 2);
+    } else {
+        this.value = parts[0].slice(0, 6);
+    }
+}
+
+function replaceCommaToDecimalPoint(fieldElement){
+    fieldElement.value = fieldElement.value.replace(',', '.');
 }

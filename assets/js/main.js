@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', sortAll);
+if (amount) {
+    amount.addEventListener('input', addValidationPatternForAmount);
+}
+
+if (formCard && amount) {
+    formCard.addEventListener('submit', function () {
+        replaceCommaToDecimalPoint(amount);
+    });
+}
+
 submitFormValidation();
 clearErrorsAndUpdateButton();
 toggleValidationErrors();
