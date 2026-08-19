@@ -41,7 +41,7 @@
                     <div class="offcanvas-body">
                         <ul class="nav-menu">
                             <li class="nav-item">
-                                <a class="navbar-button" href="#">
+                                <a class="navbar-button" href="addIncome.php">
                                     <img src="assets/images/navbar/dollar-sign.svg" height="16" alt="">
                                     <span>Add Income</span>
                                 </a>

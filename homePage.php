@@ -42,7 +42,7 @@
                     <div class="offcanvas-body">
                         <ul class="nav-menu">
                             <li class="nav-item">
-                                <a class="navbar-button" href="#">
+                                <a class="navbar-button" href="addIncome.php">
                                     <img src="assets/images/navbar/dollar-sign.svg" height="16" alt="">
                                     <span>Add Income</span>
                                 </a>
@@ -92,7 +92,7 @@
                 <h1 class="h4">Hello <span>Dawid</span>!</h1>
                 <p>What do you want to do?</p>
                 <div class="homePage-menu">
-                    <a class="menu-button p-3" data-tone="income" href="#">
+                    <a class="menu-button p-3" data-tone="income" href="addIncome.php">
                         <img src="assets/images/menu/dollar-sign.svg" height="40" alt="">
                         <span>Add Income</span>
                     </a>
