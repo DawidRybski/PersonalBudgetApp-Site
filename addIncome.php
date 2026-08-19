@@ -8,7 +8,7 @@
 
         $query = $db->prepare(
             'SELECT id, name
-            FROM expenses_category_assigned_to_users
+            FROM incomes_category_assigned_to_users
             WHERE user_id = :user_id
             ORDER BY id'
         );
@@ -19,39 +19,23 @@
 
         $categories = $query->fetchAll();
 
-        $query = $db->prepare(
-            'SELECT id, name
-            FROM payment_methods_assigned_to_users
-            WHERE user_id = :user_id
-            ORDER BY id'
-        );
-
-        $query->execute([
-            ':user_id' => $userId
-        ]);
-
-        $paymentMethods = $query->fetchAll();
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $amount = $_POST['amount'];
             $date = $_POST['date'];
-            $paymentMethodId = $_POST['paymentMethod'];
             $categoryId = $_POST['category'];
             $comment = $_POST['comment'];
 
             $query = $db->prepare(
-            'INSERT INTO expenses (
+            'INSERT INTO incomes (
                 user_id,
-                expense_category_assigned_to_user_id,
-                payment_method_assigned_to_user_id,
+                income_category_assigned_to_user_id,
                 amount,
-                date_of_expense,
-                expense_comment
+                date_of_income,
+                income_comment
             )
             VALUES (
                 :user_id,
                 :category_id,
-                :payment_method_id,
                 :amount,
                 :date,
                 :comment
@@ -61,7 +45,6 @@
             $query->execute([
                 ':user_id' => $userId,
                 ':category_id' => $categoryId,
-                ':payment_method_id' => $paymentMethodId,
                 ':amount' => $amount,
                 ':date' => $date,
                 ':comment' => $comment
@@ -69,7 +52,7 @@
 
             $_SESSION['added_expense_toast'] = 'Expense added!';
 
-            header('Location: addExpense.php');
+            header('Location: addIncome.php');
             exit;
         }
     } 
