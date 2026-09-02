@@ -5,6 +5,65 @@
         header('Location: logIn.php');
         exit;
     }
+
+    try {
+		require_once __DIR__.'/config/database.php';
+
+        $userId = $_SESSION['user_id'];
+
+        $startDate = date('Y-m-01');
+        $endDate = date('Y-m-t');
+
+        if (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+            $startDate = $_GET['startDate'];
+            $endDate = $_GET['endDate'];
+        }
+
+        $query = $db->prepare(
+            'SELECT e.id, e.amount, e.date_of_expense, e.expense_comment, ec.name as expense_category_name, pm.name AS payment_method_name
+            FROM expenses e
+            JOIN expenses_category_assigned_to_users ec
+                ON e.expense_category_assigned_to_user_id = ec.id
+            JOIN payment_methods_assigned_to_users pm
+                ON e.payment_method_assigned_to_user_id = pm.id
+            WHERE user_id = :user_id
+                AND date_of_expense BETWEEN :start_date AND :end_date
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ]);
+
+        $expenses = $query->fetchAll();
+
+        $query = $db->prepare(
+            'SELECT i.id, i.amount, i.date_of_expense, i.expense_comment, ic.name as income_category_name
+            FROM incomes i
+            JOIN incomes_category_assigned_to_users ic
+                ON i.expense_category_assigned_to_user_id = ic.id
+            WHERE user_id = :user_id
+                AND date_of_expense BETWEEN :start_date AND :end_date
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ]);
+
+        $incomes = $query->fetchAll();
+
+    } 
+    catch (PDOException $error){
+		error_log($error->getMessage());
+
+        $_SESSION['server_error'] = 'Server error. Please try again later.';
+        exit;
+	}
 ?>
 
 <!DOCTYPE html>
