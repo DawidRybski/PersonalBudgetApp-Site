@@ -11,13 +11,48 @@
 
         $userId = $_SESSION['user_id'];
 
-        $startDate = date('Y-m-01');
+        $startDate = date('Y-08-01');
         $endDate = date('Y-m-t');
 
         if (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
         }
+
+        $query = $db->prepare(
+            'SELECT i.id, i.amount, i.date_of_income, i.income_comment, ic.name as income_category_name
+            FROM incomes i
+            JOIN incomes_category_assigned_to_users ic
+                ON i.income_category_assigned_to_user_id = ic.id
+            WHERE i.user_id = :user_id
+                AND date_of_income BETWEEN :start_date AND :end_date
+            ORDER BY i.id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ]);
+
+        $incomes = $query->fetchAll();
+
+        $incomesByCategory = [];
+
+        foreach ($incomes as $income) {
+            $category = $income['income_category_name'];
+
+            if (!isset($incomesByCategory[$category])) {
+                $incomesByCategory[$category] = [
+                    'total' => 0,
+                    'transactions' => []
+                ];
+            }
+
+            $incomesByCategory[$category]['total'] += $income['amount'];
+            $incomesByCategory[$category]['transactions'][] = $income;
+        }
+
 
         $query = $db->prepare(
             'SELECT e.id, e.amount, e.date_of_expense, e.expense_comment, ec.name as expense_category_name, pm.name AS payment_method_name
@@ -28,7 +63,7 @@
                 ON e.payment_method_assigned_to_user_id = pm.id
             WHERE e.user_id = :user_id
                 AND date_of_expense BETWEEN :start_date AND :end_date
-            ORDER BY id'
+            ORDER BY e.id'
         );
 
         $query->execute([
@@ -38,24 +73,6 @@
         ]);
 
         $expenses = $query->fetchAll();
-
-        $query = $db->prepare(
-            'SELECT i.id, i.amount, i.date_of_income, i.income_comment, ic.name as income_category_name
-            FROM incomes i
-            JOIN incomes_category_assigned_to_users ic
-                ON i.income_category_assigned_to_user_id = ic.id
-            WHERE i.user_id = :user_id
-                AND date_of_income BETWEEN :start_date AND :end_date
-            ORDER BY id'
-        );
-
-        $query->execute([
-            ':user_id' => $userId,
-            ':start_date' => $startDate,
-            ':end_date' => $endDate
-        ]);
-
-        $incomes = $query->fetchAll();
 
     } 
     catch (PDOException $error){
@@ -185,23 +202,27 @@
                     <div class="form-card">
                         <div id="incomes">
                             <ul class="incomes-list">
+                                
+                            <?php foreach ($incomesByCategory as $categoryName => $category): ?>
                                 <li class="transactions-category">
                                     <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="allegro sale">Allegro sale</span>
-                                        <span class="h5 mb-1" data-amount="900">900</span>
+                                        <span class="h5 mb-1" data-category="<?= htmlspecialchars($categoryName) ?>"><?= htmlspecialchars($categoryName) ?></span>
+                                        <span class="h5 mb-1" data-amount="<?= $category['total'] ?>"><?= number_format($category['total'], 2, '.', '') ?></span>
                                     </div>
                                     <ul class="transactions-list">
+
+                                    <?php foreach ($category['transactions'] as $income): ?>
                                         <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Sold board game"
-                                        data-date="2026-03-03"
-                                        data-amount="500"
-                                        data-category="allegro-sale">
+                                        data-comment="<?= htmlspecialchars($income['income_comment']) ?>"
+                                        data-date="<?= htmlspecialchars($income['date_of_income']) ?>"
+                                        data-amount="<?= htmlspecialchars($income['amount']) ?>"
+                                        data-category="<?= htmlspecialchars($income['income_category_name']) ?>">
                                             <div>
-                                                <span class="transaction-comment">Sold board game</span><br>
-                                                <small class="text-body-secondary transaction-date">03.03.2026</small>
+                                                <span class="transaction-comment"><?= htmlspecialchars($income['income_comment']) ?></span><br>
+                                                <small class="text-body-secondary transaction-date"><?= date('d.m.Y',strtotime($income['date_of_income'])) ?></small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="text transaction-amount">500</span><br>
+                                                <span class="text transaction-amount"><?= number_format($income['amount'], 2, '.', '') ?></span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
                                                     <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
@@ -210,73 +231,11 @@
                                                 </button> 
                                             </div>
                                         </li>
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Sold keyboard"
-                                        data-date="2026-03-04"
-                                        data-amount="250"
-                                        data-category="allegro-sale">
-                                            <div>
-                                                <span class="transaction-comment">Sold keyboard</span><br>
-                                                <small class="text-body-secondary transaction-date">04.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text transaction-amount">250</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Sold mouse"
-                                        data-date="2026-03-07"
-                                        data-amount="150"
-                                        data-category="allegro-sale">
-                                            <div>
-                                                <span class="transaction-comment">Sold mouse</span><br>
-                                                <small class="text-body-secondary transaction-date">07.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text transaction-amount">150</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
+                                    <?php endforeach; ?>
+
                                     </ul>
                                 </li>
-                                <li class="transactions-category">
-                                    <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="salary">Salary</span>
-                                        <span class="h5 mb-1" data-amount="5700">5700</span>
-                                    </div>
-                                    <ul class="transactions-list">
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Salary"
-                                        data-date="2026-03-10"
-                                        data-amount="5700"
-                                        data-category="salary">
-                                            <div>
-                                                <span class="transaction-comment">Salary</span><br>
-                                                <small class="text-body-secondary transaction-date">10.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text transaction-amount" data-amount="5700">5700</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
+                            <?php endforeach; ?>
 
                             </ul>
                         </div>
