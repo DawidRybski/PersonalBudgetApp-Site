@@ -74,6 +74,22 @@
 
         $expenses = $query->fetchAll();
 
+        $expensesByCategory = [];
+
+        foreach ($expenses as $expense) {
+            $category = $expense['expense_category_name'];
+
+            if (!isset($expensesByCategory[$category])) {
+                $expensesByCategory[$category] = [
+                    'total' => 0,
+                    'transactions' => []
+                ];
+            }
+
+            $expensesByCategory[$category]['total'] += $expense['amount'];
+            $expensesByCategory[$category]['transactions'][] = $expense;
+        }
+
     } 
     catch (PDOException $error){
 		error_log($error->getMessage());
@@ -246,24 +262,28 @@
                     <div class="form-card"> 
                         <div id="expenses">
                             <ul class="expenses-list">
+                            
+                            <?php foreach ($expensesByCategory as $categoryName => $category): ?>
                                 <li class="transactions-category">
                                     <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="food">Food</span>
-                                        <span class="h5 mb-1 text-danger" data-amount="200">-200</span>
+                                        <span class="h5 mb-1" data-category="<?= htmlspecialchars($categoryName) ?>"><?= htmlspecialchars($categoryName) ?></span>
+                                        <span class="h5 mb-1 text-danger" data-amount="<?= $category['total'] ?>">-<?= number_format($category['total'], 2, '.', '') ?></span>
                                     </div>
                                     <ul class="transactions-list">
+
+                                    <?php foreach ($category['transactions'] as $expense): ?>
                                         <li class="transaction-item d-flex justify-content-between" 
-                                        data-comment="Groceries"
-                                        data-date="2026-03-15"
-                                        data-amount="120"
-                                        data-category="food"
-                                        data-payment-method="cash">
+                                        data-comment="<?= htmlspecialchars($expense['expense_comment']) ?>"
+                                        data-date="<?= htmlspecialchars($expense['date_of_expense']) ?>"
+                                        data-amount="<?= htmlspecialchars($expense['amount']) ?>"
+                                        data-category="<?= htmlspecialchars($expense['expense_category_name']) ?>"
+                                        data-payment-method="<?= htmlspecialchars($expense['expense_category_name']) ?>">
                                             <div>
-                                                <span class="transaction-comment">Groceries</span><br>
-                                                <small class="text-body-secondary transaction-date">15.03.2026</small>
+                                                <span class="transaction-comment"><?= htmlspecialchars($expense['expense_comment']) ?></span><br>
+                                                <small class="text-body-secondary transaction-date"><?= date('d.m.Y',strtotime($expense['date_of_expense'])) ?></small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="text-danger transaction-amount">-120</span><br>
+                                                <span class="text-danger transaction-amount">-<?= number_format($expense['amount'], 2, '.', '') ?></span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
                                                     <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
@@ -272,104 +292,12 @@
                                                 </button>
                                             </div>
                                         </li>
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Restaurant"
-                                        data-date="2026-03-12"
-                                        data-amount="80"
-                                        data-category="food"
-                                        data-payment-method="cash">
-                                            <div>
-                                                <span class="transaction-comment">Restaurant</span><br>
-                                                <small class="text-body-secondary transaction-date">12.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text-danger transaction-amount">-80</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button>
-                                            </div>
-                                        </li>
+                                    <?php endforeach; ?>
+
                                     </ul>
                                 </li>
-                                <li class="transactions-category">
-                                    <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="apartment">Apartment</span>
-                                        <span class="h5 mb-1 text-danger" data-amount="1500">-1500</span>
-                                    </div>
-                                    <ul class="transactions-list">
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Rent"
-                                        data-date="2026-03-10"
-                                        data-amount="1500"
-                                        data-category="apartment"
-                                        data-payment-method="debit-card">
-                                            <div>
-                                                <span class="transaction-comment">Rent</span><br>
-                                                <small class="text-body-secondary transaction-date">10.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text-danger transaction-amount">-1500</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="transactions-category">
-                                    <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="rent">Recreation</span>
-                                        <span class="h5 mb-1 text-danger" data-amount="2000">-2000</span>
-                                    </div>
-                                    <ul class="transactions-list">
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Sail trip"
-                                        data-date="2026-03-02"
-                                        data-amount="1800"
-                                        data-category="recreation"
-                                        data-payment-method="debit-card">
-                                            <div>
-                                                <span class="transaction-comment">Sail trip</span><br>
-                                                <small class="text-body-secondary transaction-date">02.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text-danger transaction-amount">-1800</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Board games event"
-                                        data-date="2026-03-07"
-                                        data-amount="200"
-                                        data-category="recreation"
-                                        data-payment-method="cash">
-                                            <div>
-                                                <span class="transaction-comment">Board games event</span><br>
-                                                <small class="text-body-secondary transaction-date">07.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text-danger transaction-amount">-200</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
+                            <?php endforeach; ?>
+
                             </ul>
                         </div>
                     </div>
