@@ -26,7 +26,7 @@
                 ON e.expense_category_assigned_to_user_id = ec.id
             JOIN payment_methods_assigned_to_users pm
                 ON e.payment_method_assigned_to_user_id = pm.id
-            WHERE user_id = :user_id
+            WHERE e.user_id = :user_id
                 AND date_of_expense BETWEEN :start_date AND :end_date
             ORDER BY id'
         );
@@ -40,12 +40,12 @@
         $expenses = $query->fetchAll();
 
         $query = $db->prepare(
-            'SELECT i.id, i.amount, i.date_of_expense, i.expense_comment, ic.name as income_category_name
+            'SELECT i.id, i.amount, i.date_of_income, i.income_comment, ic.name as income_category_name
             FROM incomes i
             JOIN incomes_category_assigned_to_users ic
-                ON i.expense_category_assigned_to_user_id = ic.id
-            WHERE user_id = :user_id
-                AND date_of_expense BETWEEN :start_date AND :end_date
+                ON i.income_category_assigned_to_user_id = ic.id
+            WHERE i.user_id = :user_id
+                AND date_of_income BETWEEN :start_date AND :end_date
             ORDER BY id'
         );
 
@@ -62,6 +62,7 @@
 		error_log($error->getMessage());
 
         $_SESSION['server_error'] = 'Server error. Please try again later.';
+        echo $error->getMessage();
         exit;
 	}
 ?>
