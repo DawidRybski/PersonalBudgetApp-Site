@@ -195,20 +195,20 @@
                             <button type="button" class="btn button-primary">Current month</button>
                             <button type="button" class="btn button-primary">Previous month</button>
                         </div>
-                        <div class="container d-flex flex-column justify-content-start p-3">
+                        <form method="GET" class="container d-flex flex-column justify-content-start p-3">
                             <h3 class="h6 m-0">Custom period</h3>
                             <div class="row input-wrapper start-date p-3">
                                 <span>Start date:</span>
                                 <label for="periodStartDate" class="visually-hidden">Date</label>
-                                <input id="periodStartDate" name="date" class="col field" type="date" required>
+                                <input id="periodStartDate" name="startDate" class="col field" type="date" required>
                             </div>
                             <div class="row input-wrapper end-date p-3">
                                 <span>End date:</span>
                                 <label for="periodEndDate" class="visually-hidden">Date</label>
-                                <input id="periodEndDate" name="date" class="col field" type="date" required>
+                                <input id="periodEndDate" name="endDate" class="col field" type="date" required>
                             </div>
-                            <button type="button" class="btn button-primary">Save custom period</button>
-                        </div>
+                            <button type="submit" class="btn button-primary">Save custom period</button>
+                        </form>
                     </div>
                 </div>
             </div>
