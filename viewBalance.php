@@ -11,8 +11,20 @@
 
         $userId = $_SESSION['user_id'];
 
-        $startDate = date('Y-08-01');
+        $startDate = date('Y-m-01');
         $endDate = date('Y-m-t');
+
+        if (!empty($_GET['period'])){
+            if ($_GET['period'] === 'current'){
+                $startDate = date('Y-m-01');
+                $endDate = date('Y-m-t');
+            }
+             
+            if ($_GET['period'] === 'previous'){
+                $startDate = date('Y-m-d', strtotime('first day of previous month'));
+                $endDate = date('Y-m-d', strtotime('last day of previous month'));
+            }
+        }
 
         if (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
             $startDate = $_GET['startDate'];
@@ -191,10 +203,10 @@
                             <h2 id="calendarModalLabel" class="h4">Select a dates range</h2>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <button type="button" class="btn button-primary">Current month</button>
-                            <button type="button" class="btn button-primary">Previous month</button>
-                        </div>
+                        <form method="GET" class="modal-body">
+                            <button type="submit" name="period" value="current" class="btn button-primary">Current month</button>
+                            <button type="submit" name="period" value="previous" class="btn button-primary">Previous month</button>
+                        </form>
                         <form method="GET" class="container d-flex flex-column justify-content-start p-3">
                             <h3 class="h6 m-0">Custom period</h3>
                             <div class="row input-wrapper start-date p-3">
