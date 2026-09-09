@@ -11,6 +11,33 @@
 
         $userId = $_SESSION['user_id'];
 
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM expenses_category_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId
+        ]);
+
+        $expenseCategories = $query->fetchAll();
+
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM payment_methods_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId
+        ]);
+
+        $paymentMethods = $query->fetchAll();
+
+
         $startDate = date('Y-m-01');
         $endDate = date('Y-m-t');
 
@@ -67,7 +94,10 @@
 
 
         $query = $db->prepare(
-            'SELECT e.id, e.amount, e.date_of_expense, e.expense_comment, ec.name as expense_category_name, pm.name AS payment_method_name
+            'SELECT e.id, e.amount, e.date_of_expense, e.expense_comment, 
+            e.expense_category_assigned_to_user_id as expense_category_id, 
+            e.payment_method_assigned_to_user_id as payment_method_id,
+            ec.name as expense_category_name, pm.name AS payment_method_name
             FROM expenses e
             JOIN expenses_category_assigned_to_users ec
                 ON e.expense_category_assigned_to_user_id = ec.id
@@ -100,6 +130,44 @@
 
             $expensesByCategory[$category]['total'] += $expense['amount'];
             $expensesByCategory[$category]['transactions'][] = $expense;
+        }
+
+        if (isset($_POST['expenseId'])){
+            $userExpenseId = $_POST['expenseId'];
+            $userExpenseAmount = $_POST['amount'];
+            $userExpenseDate = $_POST['date'];
+            $userExpenseCategory = $_POST['category'];
+            $userExpensePaymentMethod = $_POST['paymentMethod'];
+            $userExpenseComment = $_POST['comment'];
+
+            $query = $db->prepare(
+                'UPDATE expenses e
+                SET e.amount=:userExpenseAmount, 
+                e.date_of_expense=:userExpenseDate,
+                e.expense_category_assigned_to_user_id=:userExpenseCategory,
+                e.payment_method_assigned_to_user_id=:userExpensePaymentMethod,
+                e.expense_comment=:userExpenseComment
+                WHERE e.id=:userExpenseId AND e.user_id = :userId'
+            );
+
+            $query->execute([
+                ':userId' => $userId,
+                ':userExpenseId' => $userExpenseId,
+                ':userExpenseAmount' => $userExpenseAmount,
+                ':userExpenseDate' => $userExpenseDate,
+                ':userExpenseCategory' => $userExpenseCategory,
+                ':userExpensePaymentMethod' => $userExpensePaymentMethod,
+                ':userExpenseComment' => $userExpenseComment
+            ]);
+            
+            if (!empty($_GET['period'])){
+                header('Location: viewBalance.php?period=' . $_GET['period']);
+            } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+                header('Location: viewBalance.php?startDate=' . $_GET['startDate'] . '&endDate=' . $_GET['endDate']);
+            } else {
+                header('Location: viewBalance.php');
+            }
+            exit;
         }
 
     } 
@@ -284,12 +352,13 @@
                                     <ul class="transactions-list">
 
                                     <?php foreach ($category['transactions'] as $expense): ?>
-                                        <li class="transaction-item d-flex justify-content-between" 
+                                        <li class="transaction-item d-flex justify-content-between"
+                                        data-id="<?= $expense['id'] ?>"
                                         data-comment="<?= htmlspecialchars($expense['expense_comment']) ?>"
                                         data-date="<?= htmlspecialchars($expense['date_of_expense']) ?>"
                                         data-amount="<?= htmlspecialchars($expense['amount']) ?>"
-                                        data-category="<?= htmlspecialchars($expense['expense_category_name']) ?>"
-                                        data-payment-method="<?= htmlspecialchars($expense['expense_category_name']) ?>">
+                                        data-category="<?= htmlspecialchars($expense['expense_category_id']) ?>"
+                                        data-payment-method="<?= htmlspecialchars($expense['payment_method_id']) ?>">
                                             <div>
                                                 <span class="transaction-comment"><?= htmlspecialchars($expense['expense_comment']) ?></span><br>
                                                 <small class="text-body-secondary transaction-date"><?= date('d.m.Y',strtotime($expense['date_of_expense'])) ?></small>
@@ -383,7 +452,8 @@
                         <h2 id="editExpenseModalLabel" class="h4">Edit record</h2>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="container d-flex flex-column justify-content-start p-3">
+                    <form method="POST" class="container d-flex flex-column justify-content-start p-3">
+                        <input type="hidden" name="expenseId" id="expenseId">
                         <div class="row input-wrapper start-date p-2">
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/dollar-sign.svg" alt="">
@@ -404,10 +474,11 @@
                             </span>
                             <label for="expensePaymentMethod" class="visually-hidden">Payment method</label>
                             <select id="expensePaymentMethod" name="paymentMethod" class="col field select-field" required>
-                                <option value="" selected disabled hidden>Payment method</option>
-                                <option class="dropdown-item" value="cash">Cash</option>
-                                <option class="dropdown-item" value="credit-card">Credit card</option>
-                                <option class="dropdown-item" value="debit-card">Debit card</option>
+                                <?php foreach ($paymentMethods as $paymentMethod): ?>
+                                    <option value="<?= $paymentMethod['id'] ?>">
+                                        <?= htmlspecialchars($paymentMethod['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="row input-wrapper end-date p-2">
@@ -416,24 +487,11 @@
                             </span>
                             <label for="expenseCategory" class="visually-hidden">Category</label>
                             <select id="expenseCategory" name="category" class="col field select-field" required>
-                                <option value="" selected disabled hidden>Category</option>
-                                <option value="food">Food</option>
-                                <option value="apartment">Apartment</option>
-                                <option value="transport">Transport</option>
-                                <option value="telecommunication">Telecommunication</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="clothes">Clothes</option>
-                                <option value="hygiene">Hygiene</option>
-                                <option value="children">Children</option>
-                                <option value="recreation">Recreation</option>
-                                <option value="trips">Trips</option>
-                                <option value="learning">Learning</option>
-                                <option value="books">Books</option>
-                                <option value="savings">Savings</option>
-                                <option value="retirement">Retirement</option>
-                                <option value="debt-repayment">Debt repayment</option>
-                                <option value="donation">Donation</option>
-                                <option value="other">Other</option>
+                                <?php foreach ($expenseCategories as $expenseCategory): ?>
+                                    <option value="<?= $expenseCategory['id'] ?>">
+                                        <?= htmlspecialchars($expenseCategory['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="row input-wrapper end-date p-2">
@@ -443,8 +501,8 @@
                             <label for="expenseComment" class="visually-hidden">Comment</label>
                             <input id="expenseComment" name="comment" class="col field" type="text" placeholder="Comment" required>
                         </div>
-                        <button type="button" class="btn button-primary edit-save-button">Save transaction</button>
-                    </div>
+                        <button type="submit" class="btn button-primary edit-save-button">Save transaction</button>
+                    </form>
                 </div>
             </div>
         </div>

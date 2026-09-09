@@ -42,6 +42,7 @@ function getExpenseDataForModal() {
         const transactionItem = $(this).closest(".transaction-item");
 
         initialExpenseData = {
+            id: transactionItem.data("id"),
             amount: transactionItem.data("amount"),
             date: transactionItem.data("date"),
             comment: transactionItem.data("comment"),
@@ -49,6 +50,7 @@ function getExpenseDataForModal() {
             paymentMethod: transactionItem.data("payment-method")
         };
 
+        $("#editExpenseModal #expenseId").val(transactionItem.data("id"));
         $("#editExpenseModal #expenseAmount").val(transactionItem.data("amount"));
         $("#editExpenseModal #expenseDate").val(transactionItem.data("date"));
         $("#editExpenseModal #expensePaymentMethod").val(transactionItem.data("payment-method"));
