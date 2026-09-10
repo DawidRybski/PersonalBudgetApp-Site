@@ -86,12 +86,14 @@ function getIncomeDataForModal() {
         const transactionItem = $(this).closest(".transaction-item");
 
         initialIncomeData = {
+            id: transactionItem.data("id"),
             amount: transactionItem.data("amount"),
             date: transactionItem.data("date"),
             comment: transactionItem.data("comment"),
             category: transactionItem.data("category")
         };
 
+        $("#editIncomeModal #incomeId").val(transactionItem.data("id"));
         $("#editIncomeModal #incomeAmount").val(transactionItem.data("amount"));
         $("#editIncomeModal #incomeDate").val(transactionItem.data("date"));
         $("#editIncomeModal #incomeCategory").val(transactionItem.data("category"));

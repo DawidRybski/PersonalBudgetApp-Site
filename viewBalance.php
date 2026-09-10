@@ -13,6 +13,19 @@
 
         $query = $db->prepare(
             'SELECT id, name
+            FROM incomes_category_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId
+        ]);
+
+        $incomeCategories = $query->fetchAll();
+
+        $query = $db->prepare(
+            'SELECT id, name
             FROM expenses_category_assigned_to_users
             WHERE user_id = :user_id
             ORDER BY id'
@@ -59,7 +72,9 @@
         }
 
         $query = $db->prepare(
-            'SELECT i.id, i.amount, i.date_of_income, i.income_comment, ic.name as income_category_name
+            'SELECT i.id, i.amount, i.date_of_income, i.income_comment, 
+            i.income_category_assigned_to_user_id AS income_category_id,
+            ic.name as income_category_name
             FROM incomes i
             JOIN incomes_category_assigned_to_users ic
                 ON i.income_category_assigned_to_user_id = ic.id
@@ -92,6 +107,40 @@
             $incomesByCategory[$category]['transactions'][] = $income;
         }
 
+        if (isset($_POST['incomeId'])){
+            $userIncomeId = $_POST['incomeId'];
+            $userIncomeAmount = $_POST['amount'];
+            $userIncomeDate = $_POST['date'];
+            $userIncomeCategory = $_POST['category'];
+            $userIncomeComment = $_POST['comment'];
+
+            $query = $db->prepare(
+                'UPDATE incomes i
+                SET i.amount=:userIncomeAmount, 
+                i.date_of_income=:userIncomeDate,
+                i.income_category_assigned_to_user_id=:userIncomeCategory,
+                i.income_comment=:userIncomeComment
+                WHERE i.id=:userIncomeId AND i.user_id = :userId'
+            );
+
+            $query->execute([
+                ':userId' => $userId,
+                ':userIncomeId' => $userIncomeId,
+                ':userIncomeAmount' => $userIncomeAmount,
+                ':userIncomeDate' => $userIncomeDate,
+                ':userIncomeCategory' => $userIncomeCategory,
+                ':userIncomeComment' => $userIncomeComment
+            ]);
+
+            if (!empty($_GET['period'])){
+                header('Location: viewBalance.php?period=' . $_GET['period']);
+            } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+                header('Location: viewBalance.php?startDate=' . $_GET['startDate'] . '&endDate=' . $_GET['endDate']);
+            } else {
+                header('Location: viewBalance.php');
+            }
+            exit;
+        }
 
         $query = $db->prepare(
             'SELECT e.id, e.amount, e.date_of_expense, e.expense_comment, 
@@ -309,10 +358,11 @@
 
                                     <?php foreach ($category['transactions'] as $income): ?>
                                         <li class="transaction-item d-flex justify-content-between"
+                                        data-id="<?= $income['id'] ?>"
                                         data-comment="<?= htmlspecialchars($income['income_comment']) ?>"
                                         data-date="<?= htmlspecialchars($income['date_of_income']) ?>"
                                         data-amount="<?= htmlspecialchars($income['amount']) ?>"
-                                        data-category="<?= htmlspecialchars($income['income_category_name']) ?>">
+                                        data-category="<?= htmlspecialchars($income['income_category_id']) ?>">
                                             <div>
                                                 <span class="transaction-comment"><?= htmlspecialchars($income['income_comment']) ?></span><br>
                                                 <small class="text-body-secondary transaction-date"><?= date('d.m.Y',strtotime($income['date_of_income'])) ?></small>
@@ -405,7 +455,8 @@
                         <h2 id="editIncomeModalLabel" class="h4">Edit record</h2>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="container d-flex flex-column justify-content-start p-3">
+                    <form method="POST" class="container d-flex flex-column justify-content-start p-3">
+                        <input type="hidden" name="incomeId" id="incomeId">
                         <div class="row input-wrapper start-date p-2">
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/dollar-sign.svg" alt="">
@@ -426,11 +477,11 @@
                             </span>
                             <label for="incomeCategory" class="visually-hidden">Category</label>
                             <select id="incomeCategory" name="category" class="col field select-field" required>
-                                <option value="" selected disabled hidden>Category</option>
-                                <option value="allegro-sale">Allegro sale</option>
-                                <option value="salary">Salary</option>
-                                <option value="bank-interes">Bank interes</option>
-                                <option value="other">Other</option>
+                                <?php foreach ($incomeCategories as $incomeCategory): ?>
+                                    <option value="<?= $incomeCategory['id'] ?>">
+                                        <?= htmlspecialchars($incomeCategory['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="row input-wrapper end-date p-2">
@@ -440,8 +491,8 @@
                             <label for="incomeComment" class="visually-hidden">Comment</label>
                             <input id="incomeComment" name="comment" class="col field" type="text" placeholder="Comment" required>
                         </div>
-                        <button type="button" class="btn button-primary edit-save-button">Save transaction</button>
-                    </div>
+                        <button type="submit" class="btn button-primary edit-save-button">Save transaction</button>
+                    </form>
                 </div>
             </div>
         </div>
