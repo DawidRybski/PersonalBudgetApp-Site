@@ -142,6 +142,29 @@
             exit;
         }
 
+        if (isset($_POST['removeIncomeId'])){
+            $userRemoveIncomeId = $_POST['removeIncomeId'];
+
+            $query = $db->prepare(
+                'DELETE FROM incomes
+                WHERE incomes.id=:removeIncomeId AND incomes.user_id = :userId'
+            );
+
+            $query->execute([
+                ':userId' => $userId,
+                ':removeIncomeId' => $userRemoveIncomeId,
+            ]);
+
+            if (!empty($_GET['period'])){
+                header('Location: viewBalance.php?period=' . $_GET['period']);
+            } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+                header('Location: viewBalance.php?startDate=' . $_GET['startDate'] . '&endDate=' . $_GET['endDate']);
+            } else {
+                header('Location: viewBalance.php');
+            }
+            exit;
+        }
+
         $query = $db->prepare(
             'SELECT e.id, e.amount, e.date_of_expense, e.expense_comment, 
             e.expense_category_assigned_to_user_id as expense_category_id, 
@@ -209,6 +232,29 @@
                 ':userExpenseComment' => $userExpenseComment
             ]);
             
+            if (!empty($_GET['period'])){
+                header('Location: viewBalance.php?period=' . $_GET['period']);
+            } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+                header('Location: viewBalance.php?startDate=' . $_GET['startDate'] . '&endDate=' . $_GET['endDate']);
+            } else {
+                header('Location: viewBalance.php');
+            }
+            exit;
+        }
+
+        if (isset($_POST['removeExpenseId'])){
+            $userRemoveExpenseId = $_POST['removeExpenseId'];
+
+            $query = $db->prepare(
+                'DELETE FROM expenses
+                WHERE expenses.id=:removeExpenseId AND expenses.user_id = :userId'
+            );
+
+            $query->execute([
+                ':userId' => $userId,
+                ':removeExpenseId' => $userRemoveExpenseId,
+            ]);
+
             if (!empty($_GET['period'])){
                 header('Location: viewBalance.php?period=' . $_GET['period']);
             } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
@@ -372,7 +418,7 @@
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
                                                     <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
+                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeIncomeModal">
                                                     <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
@@ -418,7 +464,7 @@
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
                                                     <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
+                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeExpenseModal">
                                                     <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button>
                                             </div>
@@ -496,6 +542,26 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="removeIncomeModal" tabindex="-1"  role="dialog" aria-labelledby="removeIncomeModalLabel" aria-hidden="true"> 
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header form-header">
+                        <h2 id="removeIncomeModalLabel" class="h4">Remove income</h2>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST">
+                        <input type="hidden" name="removeIncomeId" id="removeIncomeId">
+                        <div class="container d-flex flex-column justify-content-start p-3">
+                            <h3 class="h6 m-0">Are you sure you want to delete this income?</h3>
+                        </div>
+                        <div class="modal-body">
+                            <button type="button" class="btn button-outline" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn button-primary">Confirm</button>
+                        </div>
+                    </form>    
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="editExpenseModal" tabindex="-1"  role="dialog" aria-labelledby="editExpenseModalLabel" aria-hidden="true"> 
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -557,23 +623,26 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="removeModal" tabindex="-1"  role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true"> 
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header form-header">
-                            <h2 id="removeModalLabel" class="h4">Remove transaction</h2>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
+        <div class="modal fade" id="removeExpenseModal" tabindex="-1"  role="dialog" aria-labelledby="removeExpenseModalLabel" aria-hidden="true"> 
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header form-header">
+                        <h2 id="removeExpenseModalLabel" class="h4">Remove expense</h2>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST">
+                        <input type="hidden" name="removeExpenseId" id="removeExpenseId">
                         <div class="container d-flex flex-column justify-content-start p-3">
-                            <h3 class="h6 m-0">Are you sure you want to delete transaction?</h3>
+                            <h3 class="h6 m-0">Are you sure you want to delete this expense?</h3>
                         </div>
                         <div class="modal-body">
                             <button type="button" class="btn button-outline" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn button-primary">Confirm</button>
+                            <button type="submit" class="btn button-primary">Confirm</button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
+        </div>
     </main>
     <div class="toast-container position-fixed top-0 end-0 p-3">
         <div id="editToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">

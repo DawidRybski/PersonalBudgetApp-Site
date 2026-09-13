@@ -37,7 +37,7 @@ function checkIfExpenseDataChanged() {
     $("#editExpenseModal .edit-save-button").prop("disabled", isSame || hasEmptyFields);
 }
 
-function getExpenseDataForModal() {
+function getExpenseDataForEditModal() {
     $(".expenses-list").on("click", 'button[data-bs-target="#editExpenseModal"]', function () {
         const transactionItem = $(this).closest(".transaction-item");
 
@@ -61,6 +61,14 @@ function getExpenseDataForModal() {
     });
 }
 
+function getExpenseDataForRemoveModal() {
+    $(".expenses-list").on("click", 'button[data-bs-target="#removeExpenseModal"]', function () {
+        const transactionItem = $(this).closest(".transaction-item");
+
+    $("#removeExpenseModal #removeExpenseId").val(transactionItem.data("id"));
+    });
+}
+
 function checkIfIncomeDataChanged() {
     const amount = $("#editIncomeModal #incomeAmount").val();
     const date = $("#editIncomeModal #incomeDate").val();
@@ -81,7 +89,7 @@ function checkIfIncomeDataChanged() {
     $("#editIncomeModal .edit-save-button").prop("disabled", isSame || hasEmptyFields);
 }
 
-function getIncomeDataForModal() {
+function getIncomeDataForEditModal() {
     $(".incomes-list").on("click", 'button[data-bs-target="#editIncomeModal"]', function () {
         const transactionItem = $(this).closest(".transaction-item");
 
@@ -100,6 +108,14 @@ function getIncomeDataForModal() {
         $("#editIncomeModal #incomeComment").val(transactionItem.data("comment"));
 
         checkIfIncomeDataChanged();
+    });
+}
+
+function getIncomeDataForRemoveModal() {
+    $(".incomes-list").on("click", 'button[data-bs-target="#removeIncomeModal"]', function () {
+        const transactionItem = $(this).closest(".transaction-item");
+
+    $("#removeIncomeModal #removeIncomeId").val(transactionItem.data("id"));
     });
 }
 
