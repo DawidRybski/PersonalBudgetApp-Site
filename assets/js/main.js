@@ -7,7 +7,6 @@ loginRedirect();
 $("#expenseDate").attr("value", getCurrentDate());
 
 createExpensesChart();
-showEditToast();
 getExpenseDataForEditModal();
 getIncomeDataForEditModal();
 getExpenseDataForRemoveModal();

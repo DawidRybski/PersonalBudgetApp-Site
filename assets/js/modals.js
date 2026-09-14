@@ -1,19 +1,6 @@
 let initialExpenseData = {};
 let initialIncomeData = {};
 
-function showEditToast() {
-    const toastTrigger = $(".edit-save-button");
-    const toastElement = document.getElementById('editToast');
-
-    if (toastTrigger.length && toastElement) {
-        const toastEdit = bootstrap.Toast.getOrCreateInstance(toastElement);
-
-        toastTrigger.on("click", function () {
-            toastEdit.show();
-        });
-    }
-}
-
 function checkIfExpenseDataChanged() {
     const amount = $("#editExpenseModal #expenseAmount").val();
     const date = $("#editExpenseModal #expenseDate").val();
@@ -117,19 +104,4 @@ function getIncomeDataForRemoveModal() {
 
     $("#removeIncomeModal #removeIncomeId").val(transactionItem.data("id"));
     });
-}
-
-function closeEditModal() {
-    const expenseModalElement = document.getElementById("editExpenseModal");
-    const incomeModalElement = document.getElementById("editIncomeModal");
-
-    if (expenseModalElement) {
-        const expenseModalInstance = bootstrap.Modal.getOrCreateInstance(expenseModalElement);
-        expenseModalInstance.hide();
-    }
-
-    if (incomeModalElement) {
-        const incomeModalInstance = bootstrap.Modal.getOrCreateInstance(incomeModalElement);
-        incomeModalInstance.hide();
-    }
 }

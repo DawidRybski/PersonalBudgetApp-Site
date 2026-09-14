@@ -131,7 +131,8 @@
                 ':userIncomeCategory' => $userIncomeCategory,
                 ':userIncomeComment' => $userIncomeComment
             ]);
-
+            
+            $_SESSION['edit_remove_toast'] = 'Income was modified!';
             if (!empty($_GET['period'])){
                 header('Location: viewBalance.php?period=' . $_GET['period']);
             } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
@@ -155,6 +156,7 @@
                 ':removeIncomeId' => $userRemoveIncomeId,
             ]);
 
+            $_SESSION['edit_remove_toast'] = 'Income has been removed!';
             if (!empty($_GET['period'])){
                 header('Location: viewBalance.php?period=' . $_GET['period']);
             } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
@@ -232,6 +234,7 @@
                 ':userExpenseComment' => $userExpenseComment
             ]);
             
+            $_SESSION['edit_remove_toast'] = 'Expense was modified!';
             if (!empty($_GET['period'])){
                 header('Location: viewBalance.php?period=' . $_GET['period']);
             } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
@@ -255,6 +258,7 @@
                 ':removeExpenseId' => $userRemoveExpenseId,
             ]);
 
+            $_SESSION['edit_remove_toast'] = 'Expense has been removed!';
             if (!empty($_GET['period'])){
                 header('Location: viewBalance.php?period=' . $_GET['period']);
             } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
@@ -644,16 +648,28 @@
             </div>
         </div>
     </main>
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="editToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header form-header p-1">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                The transaction was modified
+     <?php if (isset($_SESSION['edit_remove_toast'])): ?>
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="editToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header form-header p-1">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <?= isset($_SESSION['edit_remove_toast']) ? htmlspecialchars($_SESSION['edit_remove_toast']) : '' ?>
+                </div>
             </div>
         </div>
-    </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const toastElement = document.getElementById('editToast');
+                const toast = new bootstrap.Toast(toastElement);
+                toast.show();
+            });
+        </script>
+    <?php
+        unset($_SESSION['edit_remove_toast']);
+        endif;
+    ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
