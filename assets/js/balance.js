@@ -113,23 +113,3 @@ function sortAll() {
         sortTransactionsByDate(list);
     });
 }
-
-/*function addValidationPatternForAmount (){
-    // Regexp przepuszczający cyfry, kropkę i przecinek
-    this.value = this.value.replace(/[^0-9.,]/g, '');
-
-    // Dzielenie wartości po przecinku i kropce
-    const parts = this.value.split(/[.,]/);
-
-    // Łączenie podzielonych wartości i ograniczenie ilości znaków do 6 przed i 2 po przecinku
-    if (parts.length > 1) {
-        const separator = this.value.includes(',') ? ',' : '.';
-        this.value = parts[0].slice(0, 6) + separator + parts[1].slice(0, 2);
-    } else {
-        this.value = parts[0].slice(0, 6);
-    }
-}
-
-function replaceCommaToDecimalPoint(fieldElement){
-    fieldElement.value = fieldElement.value.replace(',', '.');
-}*/
