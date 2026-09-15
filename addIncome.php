@@ -1,6 +1,11 @@
 <?php
     session_start();
 
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: logIn.php');
+        exit;
+    }
+
     try {
 		require_once __DIR__.'/config/database.php';
 

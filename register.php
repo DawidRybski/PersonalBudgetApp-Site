@@ -1,6 +1,12 @@
 <?php
     session_start();
 
+    if (isset($_SESSION['user_id']))
+	{
+		header('Location: homePage.php');
+		exit();
+	}
+
     if (isset($_POST['email']))
     {
         $validation_OK = true;
