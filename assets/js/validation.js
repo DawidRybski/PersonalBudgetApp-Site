@@ -2,7 +2,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const nameRegex = /^[\p{L}\p{N}_-]+$/u;
 const amount = document.querySelector('#amount');
 const comment = document.querySelector('#comment');
-const expenseForm = document.querySelector('.form-card');
+const formCard = document.querySelector('.form-card');
 
 function getCurrentDate(){
     const date = new Date();

@@ -8,7 +8,7 @@
 
         $query = $db->prepare(
             'SELECT id, name
-            FROM expenses_category_assigned_to_users
+            FROM incomes_category_assigned_to_users
             WHERE user_id = :user_id
             ORDER BY id'
         );
@@ -19,39 +19,23 @@
 
         $categories = $query->fetchAll();
 
-        $query = $db->prepare(
-            'SELECT id, name
-            FROM payment_methods_assigned_to_users
-            WHERE user_id = :user_id
-            ORDER BY id'
-        );
-
-        $query->execute([
-            ':user_id' => $userId
-        ]);
-
-        $paymentMethods = $query->fetchAll();
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $amount = $_POST['amount'];
             $date = $_POST['date'];
-            $paymentMethodId = $_POST['paymentMethod'];
             $categoryId = $_POST['category'];
             $comment = $_POST['comment'];
 
             $query = $db->prepare(
-            'INSERT INTO expenses (
+            'INSERT INTO incomes (
                 user_id,
-                expense_category_assigned_to_user_id,
-                payment_method_assigned_to_user_id,
+                income_category_assigned_to_user_id,
                 amount,
-                date_of_expense,
-                expense_comment
+                date_of_income,
+                income_comment
             )
             VALUES (
                 :user_id,
                 :category_id,
-                :payment_method_id,
                 :amount,
                 :date,
                 :comment
@@ -61,15 +45,14 @@
             $query->execute([
                 ':user_id' => $userId,
                 ':category_id' => $categoryId,
-                ':payment_method_id' => $paymentMethodId,
                 ':amount' => $amount,
                 ':date' => $date,
                 ':comment' => $comment
             ]);
 
-            $_SESSION['added_expense_toast'] = 'Expense added!';
+            $_SESSION['added_income_toast'] = 'Income added!';
 
-            header('Location: addExpense.php');
+            header('Location: addIncome.php');
             exit;
         }
     } 
@@ -86,7 +69,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Manager - Add Expense</title>
+    <title>Budget Manager - Add Income</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -116,13 +99,13 @@
                     <div class="offcanvas-body">
                         <ul class="nav-menu">
                             <li class="nav-item">
-                                <a class="navbar-button" href="addIncome.php">
+                                <a class="navbar-button active" href="addIncome.php">
                                     <img src="assets/images/navbar/dollar-sign.svg" height="16" alt="">
                                     <span>Add Income</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-button active" href="#">
+                                <a class="navbar-button" href="addExpense.php">
                                     <img src="assets/images/navbar/shopping-cart.svg" height="16" alt="">
                                     <span>Add Expense</span>
                                 </a>
@@ -160,12 +143,12 @@
         </div>
     </div>
     <main class="container main-centered position-relative">
-        <?php if (isset($_SESSION['added_expense_toast'])): ?>
+        <?php if (isset($_SESSION['added_income_toast'])): ?>
             <div class="toast-container position-absolute top-0 end-0 p-3">
-                <div id="addedExpenseToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div id="addedIncomeToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="d-flex">
                         <div class="toast-body">
-                            <?= isset($_SESSION['added_expense_toast']) ? htmlspecialchars($_SESSION['added_expense_toast']) : '' ?>
+                            <?= isset($_SESSION['added_income_toast']) ? htmlspecialchars($_SESSION['added_income_toast']) : '' ?>
                         </div>
                         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -173,21 +156,21 @@
             </div>
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
-                    const toastElement = document.getElementById('addedExpenseToast');
+                    const toastElement = document.getElementById('addedIncomeToast');
                     const toast = new bootstrap.Toast(toastElement);
                     toast.show();
                 });
             </script>
             <?php
-                unset($_SESSION['added_expense_toast']);
+                unset($_SESSION['added_income_toast']);
                 endif;
             ?>
         <section class="container main-centered">
-            <div class="add-expense-section" >
-                <h2 id="formTitle" class="form-header h4">Adding new expense</h2> 
+            <div class="add-income-section" >
+                <h2 id="formTitle" class="form-header h4">Adding new income</h2> 
                 <form class="form-card" method="post"> 
                     <div class="description">
-                        <p>Enter data for new expense</p>
+                        <p>Enter data for new income</p>
                     </div>
                     <div class="fields">
                         <div class="container field-control">
@@ -207,22 +190,6 @@
                                 </span>
                                 <label for="expenseDate" class="visually-hidden">Date</label>
                                 <input id="expenseDate" name="date" class="col field" type="date" required>
-                            </div>
-                        </div>
-                        <div class="container field-control">
-                            <div class="row input-wrapper">
-                                <span class="col-2 input-symbol">
-                                    <img src="assets/images/forms/credit-card.svg" alt="">
-                                </span>
-                                <label for="paymentMethod" class="visually-hidden">Payment method</label>
-                                <select id="paymentMethod" name="paymentMethod" class="col field select-field" required>
-                                    <option value="" selected disabled hidden>Payment method</option>
-                                    <?php foreach ($paymentMethods as $paymentMethod): ?>
-                                        <option value="<?= $paymentMethod['id'] ?>" class="dropdown-item">
-                                            <?= htmlspecialchars($paymentMethod['name']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                 </select>
                             </div>
                         </div>
                         <div class="container field-control">
@@ -251,7 +218,7 @@
                                 <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>
-                        <button class="button-primary submit addExpense" type="submit">Add expense</button>
+                        <button class="button-primary submit addExpense" type="submit">Add income</button>
                         <a class="button-outline" href="homePage.php">Cancel</a>
                     </div>
                 </form>

@@ -3,8 +3,8 @@ if (amount) {
     amount.addEventListener('input', addValidationPatternForAmount);
 }
 
-if (expenseForm && amount) {
-    expenseForm.addEventListener('submit', function () {
+if (formCard && amount) {
+    formCard.addEventListener('submit', function () {
         replaceCommaToDecimalPoint(amount);
     });
 }
