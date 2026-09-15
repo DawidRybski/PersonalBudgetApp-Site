@@ -512,7 +512,7 @@
                                 <img src="assets/images/forms/dollar-sign.svg" alt="">
                             </span>
                             <label for="incomeAmount" class="visually-hidden">Amount</label>
-                            <input id="incomeAmount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
+                            <input id="incomeAmount" name="amount" class="col field" type="number" placeholder="Amount" step="0.01" inputmode="decimal" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
@@ -580,7 +580,7 @@
                                 <img src="assets/images/forms/dollar-sign.svg" alt="">
                             </span>
                             <label for="expenseAmount" class="visually-hidden">Amount</label>
-                            <input id="expenseAmount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
+                            <input id="expenseAmount" name="amount" class="col field" type="number" placeholder="Amount" step="0.01" inputmode="decimal" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
