@@ -5,6 +5,278 @@
         header('Location: logIn.php');
         exit;
     }
+
+    try {
+		require_once __DIR__.'/config/database.php';
+
+        $userId = $_SESSION['user_id'];
+
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM incomes_category_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId
+        ]);
+
+        $incomeCategories = $query->fetchAll();
+
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM expenses_category_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId
+        ]);
+
+        $expenseCategories = $query->fetchAll();
+
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM payment_methods_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId
+        ]);
+
+        $paymentMethods = $query->fetchAll();
+
+
+        $startDate = date('Y-m-01');
+        $endDate = date('Y-m-t');
+
+        if (!empty($_GET['period'])){
+            if ($_GET['period'] === 'current'){
+                $startDate = date('Y-m-01');
+                $endDate = date('Y-m-t');
+            }
+             
+            if ($_GET['period'] === 'previous'){
+                $startDate = date('Y-m-d', strtotime('first day of previous month'));
+                $endDate = date('Y-m-d', strtotime('last day of previous month'));
+            }
+        }
+
+        if (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+            $startDate = $_GET['startDate'];
+            $endDate = $_GET['endDate'];
+        }
+
+        $query = $db->prepare(
+            'SELECT i.id, i.amount, i.date_of_income, i.income_comment, 
+            i.income_category_assigned_to_user_id AS income_category_id,
+            ic.name as income_category_name
+            FROM incomes i
+            JOIN incomes_category_assigned_to_users ic
+                ON i.income_category_assigned_to_user_id = ic.id
+            WHERE i.user_id = :user_id
+                AND date_of_income BETWEEN :start_date AND :end_date
+            ORDER BY i.id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ]);
+
+        $incomes = $query->fetchAll();
+
+        $incomesByCategory = [];
+
+        foreach ($incomes as $income) {
+            $category = $income['income_category_name'];
+
+            if (!isset($incomesByCategory[$category])) {
+                $incomesByCategory[$category] = [
+                    'total' => 0,
+                    'transactions' => []
+                ];
+            }
+
+            $incomesByCategory[$category]['total'] += $income['amount'];
+            $incomesByCategory[$category]['transactions'][] = $income;
+        }
+
+        if (isset($_POST['incomeId'])){
+            $userIncomeId = $_POST['incomeId'];
+            $userIncomeAmount = $_POST['amount'];
+            $userIncomeDate = $_POST['date'];
+            $userIncomeCategory = $_POST['category'];
+            $userIncomeComment = $_POST['comment'];
+
+            $query = $db->prepare(
+                'UPDATE incomes i
+                SET i.amount=:userIncomeAmount, 
+                i.date_of_income=:userIncomeDate,
+                i.income_category_assigned_to_user_id=:userIncomeCategory,
+                i.income_comment=:userIncomeComment
+                WHERE i.id=:userIncomeId AND i.user_id = :userId'
+            );
+
+            $query->execute([
+                ':userId' => $userId,
+                ':userIncomeId' => $userIncomeId,
+                ':userIncomeAmount' => $userIncomeAmount,
+                ':userIncomeDate' => $userIncomeDate,
+                ':userIncomeCategory' => $userIncomeCategory,
+                ':userIncomeComment' => $userIncomeComment
+            ]);
+            
+            $_SESSION['edit_remove_toast'] = 'Income was modified!';
+            if (!empty($_GET['period'])){
+                header('Location: viewBalance.php?period=' . $_GET['period']);
+            } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+                header('Location: viewBalance.php?startDate=' . $_GET['startDate'] . '&endDate=' . $_GET['endDate']);
+            } else {
+                header('Location: viewBalance.php');
+            }
+            exit;
+        }
+
+        if (isset($_POST['removeIncomeId'])){
+            $userRemoveIncomeId = $_POST['removeIncomeId'];
+
+            $query = $db->prepare(
+                'DELETE FROM incomes
+                WHERE incomes.id=:removeIncomeId AND incomes.user_id = :userId'
+            );
+
+            $query->execute([
+                ':userId' => $userId,
+                ':removeIncomeId' => $userRemoveIncomeId,
+            ]);
+
+            $_SESSION['edit_remove_toast'] = 'Income has been removed!';
+            if (!empty($_GET['period'])){
+                header('Location: viewBalance.php?period=' . $_GET['period']);
+            } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+                header('Location: viewBalance.php?startDate=' . $_GET['startDate'] . '&endDate=' . $_GET['endDate']);
+            } else {
+                header('Location: viewBalance.php');
+            }
+            exit;
+        }
+
+        $query = $db->prepare(
+            'SELECT e.id, e.amount, e.date_of_expense, e.expense_comment, 
+            e.expense_category_assigned_to_user_id as expense_category_id, 
+            e.payment_method_assigned_to_user_id as payment_method_id,
+            ec.name as expense_category_name, pm.name AS payment_method_name
+            FROM expenses e
+            JOIN expenses_category_assigned_to_users ec
+                ON e.expense_category_assigned_to_user_id = ec.id
+            JOIN payment_methods_assigned_to_users pm
+                ON e.payment_method_assigned_to_user_id = pm.id
+            WHERE e.user_id = :user_id
+                AND date_of_expense BETWEEN :start_date AND :end_date
+            ORDER BY e.id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ]);
+
+        $expenses = $query->fetchAll();
+
+        $expensesByCategory = [];
+
+        foreach ($expenses as $expense) {
+            $category = $expense['expense_category_name'];
+
+            if (!isset($expensesByCategory[$category])) {
+                $expensesByCategory[$category] = [
+                    'total' => 0,
+                    'transactions' => []
+                ];
+            }
+
+            $expensesByCategory[$category]['total'] += $expense['amount'];
+            $expensesByCategory[$category]['transactions'][] = $expense;
+        }
+
+        if (isset($_POST['expenseId'])){
+            $userExpenseId = $_POST['expenseId'];
+            $userExpenseAmount = $_POST['amount'];
+            $userExpenseDate = $_POST['date'];
+            $userExpenseCategory = $_POST['category'];
+            $userExpensePaymentMethod = $_POST['paymentMethod'];
+            $userExpenseComment = $_POST['comment'];
+
+            $query = $db->prepare(
+                'UPDATE expenses e
+                SET e.amount=:userExpenseAmount, 
+                e.date_of_expense=:userExpenseDate,
+                e.expense_category_assigned_to_user_id=:userExpenseCategory,
+                e.payment_method_assigned_to_user_id=:userExpensePaymentMethod,
+                e.expense_comment=:userExpenseComment
+                WHERE e.id=:userExpenseId AND e.user_id = :userId'
+            );
+
+            $query->execute([
+                ':userId' => $userId,
+                ':userExpenseId' => $userExpenseId,
+                ':userExpenseAmount' => $userExpenseAmount,
+                ':userExpenseDate' => $userExpenseDate,
+                ':userExpenseCategory' => $userExpenseCategory,
+                ':userExpensePaymentMethod' => $userExpensePaymentMethod,
+                ':userExpenseComment' => $userExpenseComment
+            ]);
+            
+            $_SESSION['edit_remove_toast'] = 'Expense was modified!';
+            if (!empty($_GET['period'])){
+                header('Location: viewBalance.php?period=' . $_GET['period']);
+            } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+                header('Location: viewBalance.php?startDate=' . $_GET['startDate'] . '&endDate=' . $_GET['endDate']);
+            } else {
+                header('Location: viewBalance.php');
+            }
+            exit;
+        }
+
+        if (isset($_POST['removeExpenseId'])){
+            $userRemoveExpenseId = $_POST['removeExpenseId'];
+
+            $query = $db->prepare(
+                'DELETE FROM expenses
+                WHERE expenses.id=:removeExpenseId AND expenses.user_id = :userId'
+            );
+
+            $query->execute([
+                ':userId' => $userId,
+                ':removeExpenseId' => $userRemoveExpenseId,
+            ]);
+
+            $_SESSION['edit_remove_toast'] = 'Expense has been removed!';
+            if (!empty($_GET['period'])){
+                header('Location: viewBalance.php?period=' . $_GET['period']);
+            } elseif (!empty($_GET['startDate']) && !empty($_GET['endDate'])){
+                header('Location: viewBalance.php?startDate=' . $_GET['startDate'] . '&endDate=' . $_GET['endDate']);
+            } else {
+                header('Location: viewBalance.php');
+            }
+            exit;
+        }
+
+    } 
+    catch (PDOException $error){
+		error_log($error->getMessage());
+
+        $_SESSION['server_error'] = 'Server error. Please try again later.';
+        echo $error->getMessage();
+        exit;
+	}
 ?>
 
 <!DOCTYPE html>
@@ -98,24 +370,24 @@
                             <h2 id="calendarModalLabel" class="h4">Select a dates range</h2>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <button type="button" class="btn button-primary">Current month</button>
-                            <button type="button" class="btn button-primary">Previous month</button>
-                        </div>
-                        <div class="container d-flex flex-column justify-content-start p-3">
+                        <form method="GET" class="modal-body">
+                            <button type="submit" name="period" value="current" class="btn button-primary">Current month</button>
+                            <button type="submit" name="period" value="previous" class="btn button-primary">Previous month</button>
+                        </form>
+                        <form method="GET" class="container d-flex flex-column justify-content-start p-3">
                             <h3 class="h6 m-0">Custom period</h3>
                             <div class="row input-wrapper start-date p-3">
                                 <span>Start date:</span>
                                 <label for="periodStartDate" class="visually-hidden">Date</label>
-                                <input id="periodStartDate" name="date" class="col field" type="date" required>
+                                <input id="periodStartDate" name="startDate" class="col field" type="date" required>
                             </div>
                             <div class="row input-wrapper end-date p-3">
                                 <span>End date:</span>
                                 <label for="periodEndDate" class="visually-hidden">Date</label>
-                                <input id="periodEndDate" name="date" class="col field" type="date" required>
+                                <input id="periodEndDate" name="endDate" class="col field" type="date" required>
                             </div>
-                            <button type="button" class="btn button-primary">Save custom period</button>
-                        </div>
+                            <button type="submit" class="btn button-primary">Save custom period</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -125,98 +397,41 @@
                     <div class="form-card">
                         <div id="incomes">
                             <ul class="incomes-list">
+                                
+                            <?php foreach ($incomesByCategory as $categoryName => $category): ?>
                                 <li class="transactions-category">
                                     <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="allegro sale">Allegro sale</span>
-                                        <span class="h5 mb-1" data-amount="900">900</span>
+                                        <span class="h5 mb-1" data-category="<?= htmlspecialchars($categoryName) ?>"><?= htmlspecialchars($categoryName) ?></span>
+                                        <span class="h5 mb-1" data-amount="<?= $category['total'] ?>"><?= number_format($category['total'], 2, '.', '') ?></span>
                                     </div>
                                     <ul class="transactions-list">
+
+                                    <?php foreach ($category['transactions'] as $income): ?>
                                         <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Sold board game"
-                                        data-date="2026-03-03"
-                                        data-amount="500"
-                                        data-category="allegro-sale">
+                                        data-id="<?= $income['id'] ?>"
+                                        data-comment="<?= htmlspecialchars($income['income_comment']) ?>"
+                                        data-date="<?= htmlspecialchars($income['date_of_income']) ?>"
+                                        data-amount="<?= htmlspecialchars($income['amount']) ?>"
+                                        data-category="<?= htmlspecialchars($income['income_category_id']) ?>">
                                             <div>
-                                                <span class="transaction-comment">Sold board game</span><br>
-                                                <small class="text-body-secondary transaction-date">03.03.2026</small>
+                                                <span class="transaction-comment"><?= htmlspecialchars($income['income_comment']) ?></span><br>
+                                                <small class="text-body-secondary transaction-date"><?= date('d.m.Y',strtotime($income['date_of_income'])) ?></small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="text transaction-amount">500</span><br>
+                                                <span class="text transaction-amount"><?= number_format($income['amount'], 2, '.', '') ?></span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
                                                     <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
+                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeIncomeModal">
                                                     <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button> 
                                             </div>
                                         </li>
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Sold keyboard"
-                                        data-date="2026-03-04"
-                                        data-amount="250"
-                                        data-category="allegro-sale">
-                                            <div>
-                                                <span class="transaction-comment">Sold keyboard</span><br>
-                                                <small class="text-body-secondary transaction-date">04.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text transaction-amount">250</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Sold mouse"
-                                        data-date="2026-03-07"
-                                        data-amount="150"
-                                        data-category="allegro-sale">
-                                            <div>
-                                                <span class="transaction-comment">Sold mouse</span><br>
-                                                <small class="text-body-secondary transaction-date">07.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text transaction-amount">150</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
+                                    <?php endforeach; ?>
+
                                     </ul>
                                 </li>
-                                <li class="transactions-category">
-                                    <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="salary">Salary</span>
-                                        <span class="h5 mb-1" data-amount="5700">5700</span>
-                                    </div>
-                                    <ul class="transactions-list">
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Salary"
-                                        data-date="2026-03-10"
-                                        data-amount="5700"
-                                        data-category="salary">
-                                            <div>
-                                                <span class="transaction-comment">Salary</span><br>
-                                                <small class="text-body-secondary transaction-date">10.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text transaction-amount" data-amount="5700">5700</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editIncomeModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
+                            <?php endforeach; ?>
 
                             </ul>
                         </div>
@@ -227,130 +442,43 @@
                     <div class="form-card"> 
                         <div id="expenses">
                             <ul class="expenses-list">
+                            
+                            <?php foreach ($expensesByCategory as $categoryName => $category): ?>
                                 <li class="transactions-category">
                                     <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="food">Food</span>
-                                        <span class="h5 mb-1 text-danger" data-amount="200">-200</span>
+                                        <span class="h5 mb-1" data-category="<?= htmlspecialchars($categoryName) ?>"><?= htmlspecialchars($categoryName) ?></span>
+                                        <span class="h5 mb-1 text-danger" data-amount="<?= $category['total'] ?>">-<?= number_format($category['total'], 2, '.', '') ?></span>
                                     </div>
                                     <ul class="transactions-list">
-                                        <li class="transaction-item d-flex justify-content-between" 
-                                        data-comment="Groceries"
-                                        data-date="2026-03-15"
-                                        data-amount="120"
-                                        data-category="food"
-                                        data-payment-method="cash">
-                                            <div>
-                                                <span class="transaction-comment">Groceries</span><br>
-                                                <small class="text-body-secondary transaction-date">15.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text-danger transaction-amount">-120</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button>
-                                            </div>
-                                        </li>
+
+                                    <?php foreach ($category['transactions'] as $expense): ?>
                                         <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Restaurant"
-                                        data-date="2026-03-12"
-                                        data-amount="80"
-                                        data-category="food"
-                                        data-payment-method="cash">
+                                        data-id="<?= $expense['id'] ?>"
+                                        data-comment="<?= htmlspecialchars($expense['expense_comment']) ?>"
+                                        data-date="<?= htmlspecialchars($expense['date_of_expense']) ?>"
+                                        data-amount="<?= htmlspecialchars($expense['amount']) ?>"
+                                        data-category="<?= htmlspecialchars($expense['expense_category_id']) ?>"
+                                        data-payment-method="<?= htmlspecialchars($expense['payment_method_id']) ?>">
                                             <div>
-                                                <span class="transaction-comment">Restaurant</span><br>
-                                                <small class="text-body-secondary transaction-date">12.03.2026</small>
+                                                <span class="transaction-comment"><?= htmlspecialchars($expense['expense_comment']) ?></span><br>
+                                                <small class="text-body-secondary transaction-date"><?= date('d.m.Y',strtotime($expense['date_of_expense'])) ?></small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="text-danger transaction-amount">-80</span><br>
+                                                <span class="text-danger transaction-amount">-<?= number_format($expense['amount'], 2, '.', '') ?></span><br>
                                                 <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
                                                     <img src="assets/images/forms/edit.svg" height="15" alt="">
                                                 </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
+                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeExpenseModal">
                                                     <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
                                                 </button>
                                             </div>
                                         </li>
+                                    <?php endforeach; ?>
+
                                     </ul>
                                 </li>
-                                <li class="transactions-category">
-                                    <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="apartment">Apartment</span>
-                                        <span class="h5 mb-1 text-danger" data-amount="1500">-1500</span>
-                                    </div>
-                                    <ul class="transactions-list">
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Rent"
-                                        data-date="2026-03-10"
-                                        data-amount="1500"
-                                        data-category="apartment"
-                                        data-payment-method="debit-card">
-                                            <div>
-                                                <span class="transaction-comment">Rent</span><br>
-                                                <small class="text-body-secondary transaction-date">10.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text-danger transaction-amount">-1500</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="transactions-category">
-                                    <div class="category-header d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-1" data-category="rent">Recreation</span>
-                                        <span class="h5 mb-1 text-danger" data-amount="2000">-2000</span>
-                                    </div>
-                                    <ul class="transactions-list">
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Sail trip"
-                                        data-date="2026-03-02"
-                                        data-amount="1800"
-                                        data-category="recreation"
-                                        data-payment-method="debit-card">
-                                            <div>
-                                                <span class="transaction-comment">Sail trip</span><br>
-                                                <small class="text-body-secondary transaction-date">02.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text-danger transaction-amount">-1800</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                        <li class="transaction-item d-flex justify-content-between"
-                                        data-comment="Board games event"
-                                        data-date="2026-03-07"
-                                        data-amount="200"
-                                        data-category="recreation"
-                                        data-payment-method="cash">
-                                            <div>
-                                                <span class="transaction-comment">Board games event</span><br>
-                                                <small class="text-body-secondary transaction-date">07.03.2026</small>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="text-danger transaction-amount">-200</span><br>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#editExpenseModal">
-                                                    <img src="assets/images/forms/edit.svg" height="15" alt="">
-                                                </button>
-                                                <button class="open-menu" type="button" data-bs-toggle="modal" data-bs-target="#removeModal">
-                                                    <img src="assets/images/forms/trash-bin.svg" height="15" alt="">
-                                                </button> 
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
+                            <?php endforeach; ?>
+
                             </ul>
                         </div>
                     </div>
@@ -377,13 +505,14 @@
                         <h2 id="editIncomeModalLabel" class="h4">Edit record</h2>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="container d-flex flex-column justify-content-start p-3">
+                    <form method="POST" class="container d-flex flex-column justify-content-start p-3">
+                        <input type="hidden" name="incomeId" id="incomeId">
                         <div class="row input-wrapper start-date p-2">
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/dollar-sign.svg" alt="">
                             </span>
                             <label for="incomeAmount" class="visually-hidden">Amount</label>
-                            <input id="incomeAmount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
+                            <input id="incomeAmount" name="amount" class="col field" type="text" placeholder="Amount" step="0.01" inputmode="decimal" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
@@ -398,11 +527,11 @@
                             </span>
                             <label for="incomeCategory" class="visually-hidden">Category</label>
                             <select id="incomeCategory" name="category" class="col field select-field" required>
-                                <option value="" selected disabled hidden>Category</option>
-                                <option value="allegro-sale">Allegro sale</option>
-                                <option value="salary">Salary</option>
-                                <option value="bank-interes">Bank interes</option>
-                                <option value="other">Other</option>
+                                <?php foreach ($incomeCategories as $incomeCategory): ?>
+                                    <option value="<?= $incomeCategory['id'] ?>">
+                                        <?= htmlspecialchars($incomeCategory['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="row input-wrapper end-date p-2">
@@ -412,8 +541,28 @@
                             <label for="incomeComment" class="visually-hidden">Comment</label>
                             <input id="incomeComment" name="comment" class="col field" type="text" placeholder="Comment" required>
                         </div>
-                        <button type="button" class="btn button-primary edit-save-button">Save transaction</button>
+                        <button type="submit" class="btn button-primary edit-save-button">Save transaction</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="removeIncomeModal" tabindex="-1"  role="dialog" aria-labelledby="removeIncomeModalLabel" aria-hidden="true"> 
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header form-header">
+                        <h2 id="removeIncomeModalLabel" class="h4">Remove income</h2>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <form method="POST">
+                        <input type="hidden" name="removeIncomeId" id="removeIncomeId">
+                        <div class="container d-flex flex-column justify-content-start p-3">
+                            <h3 class="h6 m-0">Are you sure you want to delete this income?</h3>
+                        </div>
+                        <div class="modal-body">
+                            <button type="button" class="btn button-outline" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn button-primary">Confirm</button>
+                        </div>
+                    </form>    
                 </div>
             </div>
         </div>
@@ -424,13 +573,14 @@
                         <h2 id="editExpenseModalLabel" class="h4">Edit record</h2>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="container d-flex flex-column justify-content-start p-3">
+                    <form method="POST" class="container d-flex flex-column justify-content-start p-3">
+                        <input type="hidden" name="expenseId" id="expenseId">
                         <div class="row input-wrapper start-date p-2">
                             <span class="col-1 input-symbol">
                                 <img src="assets/images/forms/dollar-sign.svg" alt="">
                             </span>
                             <label for="expenseAmount" class="visually-hidden">Amount</label>
-                            <input id="expenseAmount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
+                            <input id="expenseAmount" name="amount" class="col field" type="text" placeholder="Amount" step="0.01" inputmode="decimal" required>
                         </div>
                         <div class="row input-wrapper end-date p-2">
                             <span class="col-1 input-symbol">
@@ -445,10 +595,11 @@
                             </span>
                             <label for="expensePaymentMethod" class="visually-hidden">Payment method</label>
                             <select id="expensePaymentMethod" name="paymentMethod" class="col field select-field" required>
-                                <option value="" selected disabled hidden>Payment method</option>
-                                <option class="dropdown-item" value="cash">Cash</option>
-                                <option class="dropdown-item" value="credit-card">Credit card</option>
-                                <option class="dropdown-item" value="debit-card">Debit card</option>
+                                <?php foreach ($paymentMethods as $paymentMethod): ?>
+                                    <option value="<?= $paymentMethod['id'] ?>">
+                                        <?= htmlspecialchars($paymentMethod['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="row input-wrapper end-date p-2">
@@ -457,24 +608,11 @@
                             </span>
                             <label for="expenseCategory" class="visually-hidden">Category</label>
                             <select id="expenseCategory" name="category" class="col field select-field" required>
-                                <option value="" selected disabled hidden>Category</option>
-                                <option value="food">Food</option>
-                                <option value="apartment">Apartment</option>
-                                <option value="transport">Transport</option>
-                                <option value="telecommunication">Telecommunication</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="clothes">Clothes</option>
-                                <option value="hygiene">Hygiene</option>
-                                <option value="children">Children</option>
-                                <option value="recreation">Recreation</option>
-                                <option value="trips">Trips</option>
-                                <option value="learning">Learning</option>
-                                <option value="books">Books</option>
-                                <option value="savings">Savings</option>
-                                <option value="retirement">Retirement</option>
-                                <option value="debt-repayment">Debt repayment</option>
-                                <option value="donation">Donation</option>
-                                <option value="other">Other</option>
+                                <?php foreach ($expenseCategories as $expenseCategory): ?>
+                                    <option value="<?= $expenseCategory['id'] ?>">
+                                        <?= htmlspecialchars($expenseCategory['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="row input-wrapper end-date p-2">
@@ -484,39 +622,54 @@
                             <label for="expenseComment" class="visually-hidden">Comment</label>
                             <input id="expenseComment" name="comment" class="col field" type="text" placeholder="Comment" required>
                         </div>
-                        <button type="button" class="btn button-primary edit-save-button">Save transaction</button>
-                    </div>
+                        <button type="submit" class="btn button-primary edit-save-button">Save transaction</button>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="removeModal" tabindex="-1"  role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true"> 
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header form-header">
-                            <h2 id="removeModalLabel" class="h4">Remove transaction</h2>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
+        <div class="modal fade" id="removeExpenseModal" tabindex="-1"  role="dialog" aria-labelledby="removeExpenseModalLabel" aria-hidden="true"> 
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header form-header">
+                        <h2 id="removeExpenseModalLabel" class="h4">Remove expense</h2>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST">
+                        <input type="hidden" name="removeExpenseId" id="removeExpenseId">
                         <div class="container d-flex flex-column justify-content-start p-3">
-                            <h3 class="h6 m-0">Are you sure you want to delete transaction?</h3>
+                            <h3 class="h6 m-0">Are you sure you want to delete this expense?</h3>
                         </div>
                         <div class="modal-body">
                             <button type="button" class="btn button-outline" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn button-primary">Confirm</button>
+                            <button type="submit" class="btn button-primary">Confirm</button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
+        </div>
     </main>
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="editToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header form-header p-1">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                The transaction was modified
+     <?php if (isset($_SESSION['edit_remove_toast'])): ?>
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="editToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header form-header p-1">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <?= isset($_SESSION['edit_remove_toast']) ? htmlspecialchars($_SESSION['edit_remove_toast']) : '' ?>
+                </div>
             </div>
         </div>
-    </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const toastElement = document.getElementById('editToast');
+                const toast = new bootstrap.Toast(toastElement);
+                toast.show();
+            });
+        </script>
+    <?php
+        unset($_SESSION['edit_remove_toast']);
+        endif;
+    ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

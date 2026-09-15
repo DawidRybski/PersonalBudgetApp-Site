@@ -1,19 +1,6 @@
 let initialExpenseData = {};
 let initialIncomeData = {};
 
-function showEditToast() {
-    const toastTrigger = $(".edit-save-button");
-    const toastElement = document.getElementById('editToast');
-
-    if (toastTrigger.length && toastElement) {
-        const toastEdit = bootstrap.Toast.getOrCreateInstance(toastElement);
-
-        toastTrigger.on("click", function () {
-            toastEdit.show();
-        });
-    }
-}
-
 function checkIfExpenseDataChanged() {
     const amount = $("#editExpenseModal #expenseAmount").val();
     const date = $("#editExpenseModal #expenseDate").val();
@@ -37,11 +24,12 @@ function checkIfExpenseDataChanged() {
     $("#editExpenseModal .edit-save-button").prop("disabled", isSame || hasEmptyFields);
 }
 
-function getExpenseDataForModal() {
+function getExpenseDataForEditModal() {
     $(".expenses-list").on("click", 'button[data-bs-target="#editExpenseModal"]', function () {
         const transactionItem = $(this).closest(".transaction-item");
 
         initialExpenseData = {
+            id: transactionItem.data("id"),
             amount: transactionItem.data("amount"),
             date: transactionItem.data("date"),
             comment: transactionItem.data("comment"),
@@ -49,6 +37,7 @@ function getExpenseDataForModal() {
             paymentMethod: transactionItem.data("payment-method")
         };
 
+        $("#editExpenseModal #expenseId").val(transactionItem.data("id"));
         $("#editExpenseModal #expenseAmount").val(transactionItem.data("amount"));
         $("#editExpenseModal #expenseDate").val(transactionItem.data("date"));
         $("#editExpenseModal #expensePaymentMethod").val(transactionItem.data("payment-method"));
@@ -56,6 +45,14 @@ function getExpenseDataForModal() {
         $("#editExpenseModal #expenseComment").val(transactionItem.data("comment"));
 
         checkIfExpenseDataChanged();
+    });
+}
+
+function getExpenseDataForRemoveModal() {
+    $(".expenses-list").on("click", 'button[data-bs-target="#removeExpenseModal"]', function () {
+        const transactionItem = $(this).closest(".transaction-item");
+
+    $("#removeExpenseModal #removeExpenseId").val(transactionItem.data("id"));
     });
 }
 
@@ -79,17 +76,19 @@ function checkIfIncomeDataChanged() {
     $("#editIncomeModal .edit-save-button").prop("disabled", isSame || hasEmptyFields);
 }
 
-function getIncomeDataForModal() {
+function getIncomeDataForEditModal() {
     $(".incomes-list").on("click", 'button[data-bs-target="#editIncomeModal"]', function () {
         const transactionItem = $(this).closest(".transaction-item");
 
         initialIncomeData = {
+            id: transactionItem.data("id"),
             amount: transactionItem.data("amount"),
             date: transactionItem.data("date"),
             comment: transactionItem.data("comment"),
             category: transactionItem.data("category")
         };
 
+        $("#editIncomeModal #incomeId").val(transactionItem.data("id"));
         $("#editIncomeModal #incomeAmount").val(transactionItem.data("amount"));
         $("#editIncomeModal #incomeDate").val(transactionItem.data("date"));
         $("#editIncomeModal #incomeCategory").val(transactionItem.data("category"));
@@ -99,17 +98,10 @@ function getIncomeDataForModal() {
     });
 }
 
-function closeEditModal() {
-    const expenseModalElement = document.getElementById("editExpenseModal");
-    const incomeModalElement = document.getElementById("editIncomeModal");
+function getIncomeDataForRemoveModal() {
+    $(".incomes-list").on("click", 'button[data-bs-target="#removeIncomeModal"]', function () {
+        const transactionItem = $(this).closest(".transaction-item");
 
-    if (expenseModalElement) {
-        const expenseModalInstance = bootstrap.Modal.getOrCreateInstance(expenseModalElement);
-        expenseModalInstance.hide();
-    }
-
-    if (incomeModalElement) {
-        const incomeModalInstance = bootstrap.Modal.getOrCreateInstance(incomeModalElement);
-        incomeModalInstance.hide();
-    }
+    $("#removeIncomeModal #removeIncomeId").val(transactionItem.data("id"));
+    });
 }

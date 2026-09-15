@@ -17,9 +17,10 @@ loginRedirect();
 $("#expenseDate").attr("value", getCurrentDate());
 
 createExpensesChart();
-showEditToast();
-getExpenseDataForModal();
-getIncomeDataForModal();
+getExpenseDataForEditModal();
+getIncomeDataForEditModal();
+getExpenseDataForRemoveModal();
+getIncomeDataForRemoveModal();
 addBalanceInfo();
 
 $("#editExpenseModal").on("input change", ".field, select", function () {
