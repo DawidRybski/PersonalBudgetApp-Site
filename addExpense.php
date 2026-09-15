@@ -1,3 +1,86 @@
+<?php
+    session_start();
+
+    try {
+		require_once __DIR__.'/config/database.php';
+
+        $userId = $_SESSION['user_id'];
+
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM expenses_category_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId
+        ]);
+
+        $categories = $query->fetchAll();
+
+        $query = $db->prepare(
+            'SELECT id, name
+            FROM payment_methods_assigned_to_users
+            WHERE user_id = :user_id
+            ORDER BY id'
+        );
+
+        $query->execute([
+            ':user_id' => $userId
+        ]);
+
+        $paymentMethods = $query->fetchAll();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $amount = $_POST['amount'];
+            $date = $_POST['date'];
+            $paymentMethodId = $_POST['paymentMethod'];
+            $categoryId = $_POST['category'];
+            $comment = $_POST['comment'];
+
+            $query = $db->prepare(
+            'INSERT INTO expenses (
+                user_id,
+                expense_category_assigned_to_user_id,
+                payment_method_assigned_to_user_id,
+                amount,
+                date_of_expense,
+                expense_comment
+            )
+            VALUES (
+                :user_id,
+                :category_id,
+                :payment_method_id,
+                :amount,
+                :date,
+                :comment
+            )'
+        );
+
+            $query->execute([
+                ':user_id' => $userId,
+                ':category_id' => $categoryId,
+                ':payment_method_id' => $paymentMethodId,
+                ':amount' => $amount,
+                ':date' => $date,
+                ':comment' => $comment
+            ]);
+
+            $_SESSION['added_expense_toast'] = 'Expense added!';
+
+            header('Location: addExpense.php');
+            exit;
+        }
+    } 
+    catch (PDOException $error){
+		error_log($error->getMessage());
+
+        $_SESSION['server_error'] = 'Server error. Please try again later.';
+        exit;
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,15 +155,37 @@
         <div class="container-fluid header-container">
             <div class="user-bar-text mt-1">
                 <img src="assets/images/forms/person-icon.svg" alt="User icon">
-                <span>User: <strong>Dawid</strong></span>
+                <span>User: <strong><?= htmlspecialchars($_SESSION['name']) ?></strong></span>
             </div>
         </div>
     </div>
-    <main class="container">
+    <main class="container main-centered position-relative">
+        <?php if (isset($_SESSION['added_expense_toast'])): ?>
+            <div class="toast-container position-absolute top-0 end-0 p-3">
+                <div id="addedExpenseToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <?= isset($_SESSION['added_expense_toast']) ? htmlspecialchars($_SESSION['added_expense_toast']) : '' ?>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toastElement = document.getElementById('addedExpenseToast');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                });
+            </script>
+            <?php
+                unset($_SESSION['added_expense_toast']);
+                endif;
+            ?>
         <section class="container main-centered">
             <div class="add-expense-section" >
                 <h2 id="formTitle" class="form-header h4">Adding new expense</h2> 
-                <form class="form-card"> 
+                <form class="form-card" method="post"> 
                     <div class="description">
                         <p>Enter data for new expense</p>
                     </div>
@@ -91,7 +196,7 @@
                                     <img src="assets/images/forms/dollar-sign.svg" alt="">
                                 </span>
                                 <label for="amount" class="visually-hidden">Amount</label>
-                                <input id="amount" name="amount" class="col field" type="number" placeholder="Amount" inputmode="decimal" required>
+                                <input id="amount" name="amount" class="col field" type="text" step="0.01" placeholder="Amount" inputmode="decimal" required>
                                 <img class="error-icon" src="assets/images/forms/validate-icon.svg" alt="">
                             </div>
                         </div>
@@ -112,9 +217,11 @@
                                 <label for="paymentMethod" class="visually-hidden">Payment method</label>
                                 <select id="paymentMethod" name="paymentMethod" class="col field select-field" required>
                                     <option value="" selected disabled hidden>Payment method</option>
-                                    <option value="cash" class="dropdown-item">Cash</option>
-                                    <option value="credit-card" class="dropdown-item">Credit card</option>
-                                    <option value="debit-card" class="dropdown-item">Debit card</option>
+                                    <?php foreach ($paymentMethods as $paymentMethod): ?>
+                                        <option value="<?= $paymentMethod['id'] ?>" class="dropdown-item">
+                                            <?= htmlspecialchars($paymentMethod['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                  </select>
                             </div>
                         </div>
@@ -126,23 +233,11 @@
                                 <label for="category" class="visually-hidden">Category</label>
                                 <select id="category" name="category" class="col field select-field" required>
                                     <option value="" selected disabled hidden>Category</option>
-                                    <option value="food">Food</option>
-                                    <option value="apartment">Apartment</option>
-                                    <option value="transport">Transport</option>
-                                    <option value="telecommunication">Telecommunication</option>
-                                    <option value="healthcare">Healthcare</option>
-                                    <option value="clothes">Clothes</option>
-                                    <option value="hygiene">Hygiene</option>
-                                    <option value="children">Children</option>
-                                    <option value="recreation">Recreation</option>
-                                    <option value="trips">Trips</option>
-                                    <option value="learning">Learning</option>
-                                    <option value="books">Books</option>
-                                    <option value="savings">Savings</option>
-                                    <option value="retirement">Retirement</option>
-                                    <option value="debt-repayment">Debt repayment</option>
-                                    <option value="donation">Donation</option>
-                                    <option value="other">Other</option>
+                                    <?php foreach ($categories as $category): ?>
+                                        <option value="<?= $category['id'] ?>" class="dropdown-item">
+                                            <?= htmlspecialchars($category['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
