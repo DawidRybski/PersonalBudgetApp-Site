@@ -24,6 +24,9 @@
                         $_SESSION['user_id'] = $user['id'];
 				        $_SESSION['name'] = $user['username'];
 
+                    } else {
+                        $query = $db->prepare('UPDATE users SET token_hash = NULL, token_expires_at = NULL WHERE id = :userId');
+                        $query->execute([':userId' => $user['id']]);
                     }
                 }
 
@@ -36,6 +39,16 @@
         }
 
         if (!isset($_SESSION['user_id'])) {
+            if (isset($_COOKIE['remember_token'])) {
+                setcookie('remember_token', '', [
+                    'expires' => time() - 3600,
+                    'path' => '/',
+                    'secure' => false,
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+            }
+
             header('Location: logIn.php');
             exit;
         }
