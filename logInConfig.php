@@ -41,7 +41,7 @@
 					$tokenExpireTimestamp = time() + REMEMBER_ME_LIFETIME;
 					$tokenExpire = date('Y-m-d H:i:s', $tokenExpireTimestamp);
 
-					$query = $db->prepare('UPDATE users SET users.token_hash = :tokenHash, users.token_expires_at = :tokenExpire WHERE users.id = :userId');
+					$query = $db->prepare('UPDATE users SET token_hash = :tokenHash, token_expires_at = :tokenExpire WHERE id = :userId');
 					$query->execute([':tokenHash' => $tokenHash, ':userId' => $user['id'], ':tokenExpire' => $tokenExpire]);
 
 					setcookie('remember_token', $token, 
@@ -67,8 +67,7 @@
 			}
 		}
 
-    } catch (PDOException $error)
-    {
+    } catch (PDOException $error){
 		error_log($error->getMessage());
 		$_SESSION['toast_error'] = 'Server error. Please try again later.';
         header('Location: logIn.php');
