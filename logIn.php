@@ -86,7 +86,7 @@
                             </div>
                         </div>
                         <div class="container px-1">
-                            <input id="rememberMe" class="form-check-input" type="checkbox" value="true">
+                            <input id="rememberMe" name="rememberMe" class="form-check-input" type="checkbox" value="true">
                             <label class="form-check-label" for="rememberMe">Remember me</label>
                         </div>
                         <button class="button-primary submit logIn" type="submit">Log in</button>
