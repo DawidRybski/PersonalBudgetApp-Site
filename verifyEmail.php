@@ -3,7 +3,8 @@
 
     require_once __DIR__ . '/config/database.php';
 
-    if (!isset($_GET['token'])) {
+    if (empty($_GET['token'])) {
+        $_SESSION['registration_error_toast'] = 'Verification token not found';
         header('Location: register.php');
         exit;
     }
@@ -25,12 +26,14 @@
     $user = $query->fetch();
 
     if (!$user) {
-        echo 'Invalid verification token';
+        $_SESSION['registration_error_toast'] = 'Invalid verification token';
+        header('Location: register.php');
         exit;
     }
 
     if (strtotime($user['verification_token_expires_at']) < time()) {
-        echo 'Verification token has expired';
+        $_SESSION['expired_token_toast'] = 'Verification token has expired';
+        header('Location: confirmRegister.php');
         exit;
     }
 

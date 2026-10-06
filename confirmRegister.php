@@ -6,7 +6,9 @@
     require_once __DIR__ . '/config/mail.php';
 
     if (!isset($_SESSION['pending_verification_user_id'])){
-        header('Location: register.php');
+        $_SESSION['registration_toast'] = 'Your account has already been verified. You can now log in.';
+
+        header('Location: logIn.php');
         exit;
     }
 
@@ -20,7 +22,40 @@
 
 
     if (isset($_POST['resendEmail'])) {
-        sendVerificationEmail($user['email']);
+
+        unset(
+            $_SESSION['registration_error_toast'],
+            $_SESSION['expired_token_toast'],
+        );
+
+        if ($user['email_verified']) {
+            unset($_SESSION['pending_verification_user_id']);
+
+            $_SESSION['registration_toast'] = 'Your account has already been verified. You can now log in.';
+            header('Location: logIn.php');
+            exit;
+        }
+
+        $verificationToken = bin2hex(random_bytes(32));
+        $verificationTokenHash = hash('sha256', $verificationToken);
+
+        $tokenExpiresAt = new DateTime('+24 hour');
+        $tokenExpiresAt = $tokenExpiresAt->format('Y-m-d H:i:s');
+
+        $query = $db->prepare(
+            'UPDATE users
+                SET verification_token = :verification_token,
+                verification_token_expires_at = :verification_token_expires_at
+            WHERE id = :user_id'
+        );
+
+        $query->execute([
+            ':verification_token' => $verificationTokenHash,
+            ':verification_token_expires_at' => $tokenExpiresAt,
+            ':user_id' => $userId
+        ]);
+
+        sendVerificationEmail($user['email'], $verificationToken);
     }
 
 ?>
@@ -51,6 +86,28 @@
         </div> 
     </header>
     <main class="container main-centered position-relative">
+        <?php if (isset($_SESSION['expired_token_toast'])): ?>
+            <div class="toast-container position-absolute top-0 end-0 p-3">
+                <div id="tokenToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <?= isset($_SESSION['expired_token_toast']) ? htmlspecialchars($_SESSION['expired_token_toast']) : '' ?>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toastElement = document.getElementById('tokenToast');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                });
+            </script>
+        <?php
+            unset($_SESSION['expired_token_toast']);
+            endif;
+        ?>
         <section class="form-section">
             <h2 id="formTitle" class="form-header h4">Confirm register</h2> 
             <div class="form-card"> 
@@ -63,8 +120,8 @@
                     <div class="fields">
                         <div class="container field-control">
                             <div class="row input-wrapper">
-                                <p class="forwarding">Didn't receive the email?
-                                    Check your spam or junk folder, or click below to resend it.? 
+                                <p class="forwarding">Didn't receive the email? Or maybe the token expired?
+                                    Check your spam or junk folder, or click below to resend it. 
                                 </p>
                                 <button class="button-primary" name="resendEmail" type="submit">Resend email</button>
                             </div>

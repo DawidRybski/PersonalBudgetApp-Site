@@ -76,10 +76,10 @@
                     toast.show();
                 });
             </script>
-            <?php
-                unset($_SESSION['registration_toast']);
-                endif;
-            ?>   
+        <?php
+            unset($_SESSION['registration_toast']);
+            endif;
+        ?>
         
         <section class="login-section" >
             <h2 id="formTitle" class="form-header h4">Login Form</h2> 
