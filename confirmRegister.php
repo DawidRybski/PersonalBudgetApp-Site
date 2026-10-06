@@ -108,7 +108,7 @@
             unset($_SESSION['expired_token_toast']);
             endif;
         ?>
-        <section class="form-section">
+        <section class="form-section" style="max-width: 480px;">
             <h2 id="formTitle" class="form-header h4">Confirm register</h2> 
             <div class="form-card"> 
                 <div class="description">
@@ -120,8 +120,8 @@
                     <div class="fields">
                         <div class="container field-control">
                             <div class="row input-wrapper">
-                                <p class="forwarding">Didn't receive the email? Or maybe the token expired?
-                                    Check your spam or junk folder, or click below to resend it. 
+                                <p class="forwarding">Didn't receive the email or did it expire?
+                                    Check your spam folder or click below to resend it. 
                                 </p>
                                 <button class="button-primary" name="resendEmail" type="submit">Resend email</button>
                             </div>
