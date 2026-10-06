@@ -86,7 +86,7 @@
         <section class="menu m-3">
             <img class="menu_img" src="assets/images/wallet.svg" alt="" aria-hidden="true">
             <div class="container menu-card">
-                <h1 class="h4">Hello <span>Dawid</span>!</h1>
+                <h1 class="h4">Hello <span><?= htmlspecialchars($_SESSION['name']) ?></span>!</h1>
                 <p>What do you want to do?</p>
                 <div class="homePage-menu">
                     <a class="menu-button p-3" data-tone="income" href="addIncome.php">
