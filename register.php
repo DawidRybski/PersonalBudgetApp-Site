@@ -1,26 +1,28 @@
 <?php
     session_start();
 
-    if (isset($_SESSION['user_id']))
-	{
+    require_once __DIR__ . '/config/mail.php';
+
+    if (isset($_SESSION['user_id'])){
+
 		header('Location: homePage.php');
 		exit();
 	}
 
-    if (isset($_POST['email']))
-    {
+    if (isset($_POST['email'])){
+
         $validation_OK = true;
 
         $name = $_POST['name'];
      
-        if ((strlen($name)<3) || (strlen($name)>50))
-        {
+        if ((strlen($name)<3) || (strlen($name)>50)){
+
             $validation_OK = false;
             $_SESSION['error_name']="Name must be between 3 and 50 characters long";
         }
 
-        if (!preg_match('/^[\p{L}\p{N}_-]+$/u', $name))
-        {
+        if (!preg_match('/^[\p{L}\p{N}_-]+$/u', $name)){
+
             $validation_OK = false;
 			$_SESSION['error_name']="The name cannot contain special characters other than _ and -";
         }
@@ -28,8 +30,8 @@
         $email=$_POST['email'];
 		$emailB=filter_var($email, FILTER_SANITIZE_EMAIL);
 
-        if ((filter_var($emailB, FILTER_VALIDATE_EMAIL) == false) || ($emailB!=$email))
-		{
+        if ((filter_var($emailB, FILTER_VALIDATE_EMAIL) == false) || ($emailB!=$email)){
+
 			$validation_OK=false;
 			$_SESSION['error_email']="Looks like this is not an email!";
 		}
@@ -37,20 +39,20 @@
         $password = $_POST['password'];
 		$confirmPassword = $_POST['confirmPassword'];
 		
-		if((strlen($password)<6) || (strlen($password)>64))
-		{
+		if((strlen($password)<6) || (strlen($password)>64)){
+
 			$validation_OK=false;
 			$_SESSION['e_password']="Password must be between 6 and 64 characters long";
 		}
 		
-		if($password!=$confirmPassword)
-		{
+		if($password!=$confirmPassword){
+
 			$validation_OK=false;
 			$_SESSION['e_confirmPassword']="Passwords do not match";
 		}
 
-        if (empty($_POST['email']) || empty($_POST['name']) || empty($_POST['password']) || empty($_POST['confirmPassword']))
-        {
+        if (empty($_POST['email']) || empty($_POST['name']) || empty($_POST['password']) || empty($_POST['confirmPassword'])){
+
             $validation_OK = false;
         }
 
@@ -65,8 +67,8 @@
             $query = $db->prepare('SELECT id FROM users WHERE email = :email');
             $query->execute([':email' => $email]);
 
-            if ($query->fetch())
-            {
+            if ($query->fetch()){
+
                 $validation_OK = false;
                 $_SESSION['registration_error_toast'] = 'There is already an account with this email address!';
 
@@ -74,15 +76,24 @@
                 exit;
             }
 
-            if ($validation_OK == true) 
-            {
+            if ($validation_OK == true){
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
-                $query = $db->prepare('INSERT INTO users (username, email, password) VALUES (:name, :email, :password)');
+
+                $verificationToken = bin2hex(random_bytes(32));
+                $verificationTokenHash = hash('sha256', $verificationToken);
+
+                $tokenExpiresAt = new DateTime('+24 hour');
+                $tokenExpiresAt = $tokenExpiresAt->format('Y-m-d H:i:s');
+
+                $query = $db->prepare('INSERT INTO users (username, email, password, verification_token, verification_token_expires_at) 
+                VALUES (:name, :email, :password, :verification_token, :verification_token_expires_at)');
 
                 $query->execute([
                     ':name' => $name,
                     ':email' => $email,
-                    ':password' => $password_hash
+                    ':password' => $password_hash,
+                    ':verification_token' => $verificationTokenHash,
+                    ':verification_token_expires_at' => $tokenExpiresAt
                 ]);
 
                 $userId = $db->lastInsertId();
@@ -115,9 +126,11 @@
                     ':user_id' => $userId
                 ]);
 
-                $_SESSION['registration_toast'] = 'User successfully registered!';
-                $_SESSION['successful_registration'] = true;
-                header('Location: register.php');
+                sendVerificationEmail($email, $verificationToken);
+                $_SESSION['pending_verification_user_id'] = $userId;
+                //$_SESSION['registration_toast'] = 'User successfully registered!';
+                //$_SESSION['successful_registration'] = true;
+                header('Location: confirmRegister.php');
                 exit;
             }
 
@@ -180,28 +193,6 @@
             endif;
         ?>
 
-        <?php if (isset($_SESSION['registration_toast'])): ?>
-            <div class="toast-container position-absolute top-0 end-0 p-3">
-                <div id="registrationToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <?= isset($_SESSION['registration_toast']) ? htmlspecialchars($_SESSION['registration_toast']) : '' ?>
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const toastElement = document.getElementById('registrationToast');
-                    const toast = new bootstrap.Toast(toastElement);
-                    toast.show();
-                });
-            </script>
-            <?php
-                unset($_SESSION['registration_toast']);
-                endif;
-            ?>
         <section class="form-section">
             <h2 id="formTitle" class="form-header h4">Register Form</h2> 
             <div class="form-card"> 
