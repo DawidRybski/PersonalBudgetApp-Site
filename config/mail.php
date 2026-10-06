@@ -20,11 +20,11 @@
 		    $mail->Port = 465;
 		    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 		    $mail->SMTPAuth = true;
-		    $mail->Username = 'feitan2190@gmail.com';
-		    $mail->Password = 'laib ypxj aoir fvge';
+		    $mail->Username = 'exmaple-mail@gmail.com';
+		    $mail->Password = 'example password';
 			
 		    $mail->CharSet = 'UTF-8';
-		    $mail->setFrom('feitan2190@gmail.com','Budget Manager');
+		    $mail->setFrom('exmaple-mail@gmail.com','Budget Manager');
 		    $mail->addAddress($email);
 			
 		    $mail->isHTML(true);
