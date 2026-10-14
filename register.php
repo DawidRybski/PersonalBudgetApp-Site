@@ -128,8 +128,7 @@
 
                 sendVerificationEmail($email, $verificationToken);
                 $_SESSION['pending_verification_user_id'] = $userId;
-                //$_SESSION['registration_toast'] = 'User successfully registered!';
-                //$_SESSION['successful_registration'] = true;
+
                 header('Location: confirmRegister.php');
                 exit;
             }

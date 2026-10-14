@@ -13,6 +13,7 @@
 
     $verificationTokenHash = hash('sha256', $verificationToken);
 
+
     $query = $db->prepare(
         'SELECT id, email_verified, verification_token_expires_at
             FROM users
@@ -32,7 +33,10 @@
     }
 
     if (strtotime($user['verification_token_expires_at']) < time()) {
-        $_SESSION['expired_token_toast'] = 'Verification token has expired';
+        $_SESSION['expired_verification_user_id'] = $user['id'];
+
+        $_SESSION['expired_token_toast'] = 'Verification link has expired. Please request a new one.';
+
         header('Location: confirmRegister.php');
         exit;
     }
@@ -51,7 +55,7 @@
 
     $_SESSION['registration_toast'] = 'Your email has been successfully verified!';
 
-    unset($_SESSION['pending_verification_user_id']);
+    unset($_SESSION['pending_verification_user_id'], $_SESSION['expired_verification_user_id']);
 
     header('Location: logIn.php');
     exit;

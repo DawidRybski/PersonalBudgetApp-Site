@@ -87,7 +87,7 @@
                 <div class="description">
                     <p>Enter your credentials to continue</p>
                 </div>
-                <form id="loginForm" action="loginConfig.php" method="post" aria-labelledby="formTitle" novalidate>
+                <form id="loginForm" action="logInConfig.php" method="post" aria-labelledby="formTitle" novalidate>
                     <div class="fields">
                         <div class="container field-control">
                             <div class="row input-wrapper">
