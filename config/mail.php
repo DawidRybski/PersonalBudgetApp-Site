@@ -8,7 +8,7 @@
     use PHPMailer\PHPMailer\SMTP;
 
     function sendVerificationEmail($email, $verificationToken){
-        $verificationLink = 'http://personalbudgetapp-site.local/verifyEmail.php?token='. urlencode($verificationToken);
+        $verificationLink = 'https://personalbudgetapp-site.local/verifyEmail.php?token='.urlencode($verificationToken);
 
         try {
             $mail = new PHPMailer(true);
@@ -20,11 +20,11 @@
 		    $mail->Port = 465;
 		    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 		    $mail->SMTPAuth = true;
-		    $mail->Username = 'exmaple-mail@gmail.com';
-		    $mail->Password = 'example password';
+		    $mail->Username = 'dawid.rybski.programowanie@gmail.com';
+		    $mail->Password = 'aeha izgi jgkq fvre ';
 			
 		    $mail->CharSet = 'UTF-8';
-		    $mail->setFrom('exmaple-mail@gmail.com','Budget Manager');
+		    $mail->setFrom('dawid.rybski.programowanie@gmail.com','Budget Manager');
 		    $mail->addAddress($email);
 			
 		    $mail->isHTML(true);
